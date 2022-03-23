@@ -1,18 +1,15 @@
-
 public class Card {
-	int steps;
-	Boolean sorry;
+	private int moves;
 	
-	public Card( int s, Boolean b) {
-		steps = s;
-		sorry = b;
-	} 
-	
-	public Boolean isSorry() {
-		return sorry;
+	public Card(int m) {
+		moves = m;
 	}
 	
-	public int getSteps() {
-		return steps;
+	public int getMoves() {
+		return moves;
+	}
+	
+	public String toString() {
+		return Integer.toString(moves);
 	}
 }
