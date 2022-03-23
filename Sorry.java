@@ -7,16 +7,16 @@ import java.io.*;
 
 public class Sorry extends JFrame
 {
-	private static final int WIDTH = 1920;
-	private static final int HEIGHT = 1920;
+	private static final int WIDTH = 1366;
+	private static final int HEIGHT = 1390;
 	
 	public Sorry() throws IOException
 	{
 		super("SORRY");
 
 		setSize(WIDTH,HEIGHT);
-		setLocation(325,0);
-		setIconImage(new ImageIcon("ICON.png").getImage());
+		setLocation(600,0);
+		setIconImage(new ImageIcon("pawnBLACK.png").getImage());
 		
 		getContentPane().add(new Board() );
 
