@@ -43,7 +43,12 @@ public class Deck {
 		
 	}
 	
-	private void Shuffle() {
+	public int size()
+	{
+		return deck.size();
+	}
+	
+	public void Shuffle() {
 		int index;
 		Card temp;
 		
