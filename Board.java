@@ -11,6 +11,10 @@ import javax.imageio.*;
 public class Board extends JPanel implements Runnable , KeyListener
 {
 	private File BoardJPG;
+	private File Red;
+	private File Blue;
+	private File Yellow;
+	private File Green;
 	
     private int MouseX;
     private int MouseY;
@@ -23,6 +27,10 @@ public class Board extends JPanel implements Runnable , KeyListener
 		setBackground(Color.WHITE);
 		
 		BoardJPG = new File("gameboard.jpg");
+		Red = new File("pawnRED.png");
+		Blue = new File("pawnBLUE.png");
+		Yellow = new File("pawnYELLOW.png");
+		Green = new File("pawnGREEN.png");
 		
 		addKeyListener( this );
 		setFocusable( true );
@@ -33,9 +41,9 @@ public class Board extends JPanel implements Runnable , KeyListener
 	
 	public void paint( Graphics window )
 	{
-		window.clearRect( 0,0, 1350, 1350);
+		window.clearRect( 0,0, 1280, 1280);
 		try {
-			window.drawImage(ImageIO.read(BoardJPG), 0, 0, 1350, 1350, null);
+			window.drawImage(ImageIO.read(BoardJPG), 0, 0, 1280, 1280, null);
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
