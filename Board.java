@@ -11,10 +11,16 @@ import javax.imageio.*;
 public class Board extends JPanel implements Runnable , KeyListener
 {
 	private File BoardJPG;
-
+	private File Red;
+	private File Blue;
+	private File Yellow;
+	private File Green;
+	
     private int MouseX;
     private int MouseY;
-	
+    
+    private int pieceX;
+    private int pieceY;
 	
 	
 	
@@ -23,6 +29,12 @@ public class Board extends JPanel implements Runnable , KeyListener
 		setBackground(Color.WHITE);
 		
 		BoardJPG = new File("gameboard.jpg");
+		Red = new File("pawnRED.png");
+		Blue = new File("pawnBLUE.png");
+		Yellow = new File("pawnYELLOW.png");
+		Green = new File("pawnGREEN.png");
+		pieceX = 0;
+		pieceY = 0;
 		
 		addKeyListener( this );
 		setFocusable( true );
@@ -33,16 +45,17 @@ public class Board extends JPanel implements Runnable , KeyListener
 	
 	public void paint( Graphics window )
 	{
-		window.clearRect( 0,0, 1350, 1350);
+		window.clearRect( 0,0, 1280, 1280);
 		try {
-			window.drawImage(ImageIO.read(BoardJPG), 0, 0, 1350, 1350, null);
+			window.drawImage(ImageIO.read(BoardJPG), 0, 0, 1280, 1280, null);
+			window.drawImage(ImageIO.read(Red), 37+(pieceX*75)+(pieceX/3), 37+(pieceY*75)+(pieceY/3), 75, 75, null);
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		
-		MouseX = MouseInfo.getPointerInfo().getLocation().x;
-		MouseY = MouseInfo.getPointerInfo().getLocation().y;
+		MouseX = MouseInfo.getPointerInfo().getLocation().x-getLocationOnScreen().x;
+		MouseY = MouseInfo.getPointerInfo().getLocation().y-getLocationOnScreen().y;
 		window.setColor(Color.BLACK);
 		window.drawString("Mouse  coordinates " + "(" + MouseX + "   " + MouseY + ")", 250, 30 );
 		
@@ -50,10 +63,8 @@ public class Board extends JPanel implements Runnable , KeyListener
 	}
 	
 	
-	
 	public void run()
 	{
-
 		try
 		{
 			while( true )
@@ -66,7 +77,6 @@ public class Board extends JPanel implements Runnable , KeyListener
 		{
 			
 		}
-
 	}
 	
 	
@@ -78,8 +88,16 @@ public class Board extends JPanel implements Runnable , KeyListener
 	}
 
 	@Override
-	public void keyReleased(KeyEvent arg0) {
-		// TODO Auto-generated method stub
+	public void keyReleased(KeyEvent e)
+	{
+		if(e.getKeyCode() == KeyEvent.VK_RIGHT )
+			pieceX = pieceX+1;
+		if(e.getKeyCode() == KeyEvent.VK_LEFT )
+			pieceX = pieceX-1;
+		if(e.getKeyCode() == KeyEvent.VK_DOWN )
+			pieceY = pieceY+1;
+		if(e.getKeyCode() == KeyEvent.VK_UP )
+			pieceY = pieceY-1;
 		
 	}
 
