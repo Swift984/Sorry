@@ -9,16 +9,36 @@ public class Piece {
 	
 	private int pieceX;
 	private int pieceY;
-	private String color;
+	private File color;
 	
-	public Piece(String c, int x, int y)
+	public Piece(File c, int x, int y)
 	{
 		color = c;
 		pieceX = x;
 		pieceY = y;
 	}
 	
+	public int getX()
+	{
+		return pieceX;
+	}
 	
+	public int getY()
+	{
+		return pieceY;
+	}
+	
+	public File getColor()
+	{
+		return color;
+	}
+	
+	public boolean sameColor(Piece t)
+	{
+		if(this.color == t.color)
+			return true;
+		return false;
+	}
 	
 	public void move(String a)
 	{

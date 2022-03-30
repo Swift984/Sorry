@@ -18,11 +18,28 @@ public class Board extends JPanel implements Runnable , KeyListener
 	
     private int MouseX;
     private int MouseY;
-    
-    private int wowX;
-    private int wowY;
 	
+    private Piece O;	//THIS IS THE SELECTED PIECE
+    
     private Piece R1;
+    private Piece R2;
+    private Piece R3;
+    private Piece R4;
+    
+    private Piece B1;
+    private Piece B2;
+    private Piece B3;
+    private Piece B4;
+    
+    private Piece Y1;
+    private Piece Y2;
+    private Piece Y3;
+    private Piece Y4;
+    
+    private Piece G1;
+    private Piece G2;
+    private Piece G3;
+    private Piece G4;
 	
 	
 	public Board()
@@ -34,9 +51,8 @@ public class Board extends JPanel implements Runnable , KeyListener
 		Blue = new File("pawnBLUE.png");
 		Yellow = new File("pawnYELLOW.png");
 		Green = new File("pawnGREEN.png");
-		wowX = 0;
-		wowY = 0;
-		R1 = new Piece("Red", 11, 14);
+		
+		R1 = new Piece(Red, 11, 14);
 		
 		addKeyListener( this );
 		setFocusable( true );
@@ -70,7 +86,7 @@ public class Board extends JPanel implements Runnable , KeyListener
 	{
 		
 		try {
-			g.drawImage(ImageIO.read(Red), 37+(wowX*75)+(wowX/3), 37+(wowY*75)+(wowY/3), 75, 75, null);
+			g.drawImage(ImageIO.read(Red), 37+(p.getX()*75)+(p.getX()/3), 37+(p.getY()*75)+(p.getY()/3), 75, 75, null);
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -106,13 +122,13 @@ public class Board extends JPanel implements Runnable , KeyListener
 	public void keyReleased(KeyEvent e)
 	{
 		if(e.getKeyCode() == KeyEvent.VK_RIGHT )
-			wowX = wowX+1;
+			R1.move("RIGHT");
 		if(e.getKeyCode() == KeyEvent.VK_LEFT )
-			wowX = wowX-1;
+			R1.move("LEFT");
 		if(e.getKeyCode() == KeyEvent.VK_DOWN )
-			wowY = wowY+1;
+			R1.move("DOWN");
 		if(e.getKeyCode() == KeyEvent.VK_UP )
-			wowY = wowY-1;
+			R1.move("UP");
 		
 	}
 
