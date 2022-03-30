@@ -1,21 +1,22 @@
 import java.awt.*;
-
 import javax.sound.sampled.UnsupportedAudioFileException;
 import javax.swing.*;
 import java.util.*;
 import java.io.*;
 
+
 public class Sorry extends JFrame
 {
-	private static final int WIDTH = 1920;
-	private static final int HEIGHT = 1920;
+	private static final int WIDTH = 1296;
+	private static final int HEIGHT = 1320;
 	
 	public Sorry() throws IOException
 	{
 		super("SORRY");
 
 		setSize(WIDTH,HEIGHT);
-		setLocation(325,0);
+		setLocation(650,0);
+		setIconImage(new ImageIcon("pawnBLACK.png").getImage());
 		
 		getContentPane().add(new Board() );
 
@@ -23,6 +24,8 @@ public class Sorry extends JFrame
 
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 	}
+	
+	
 	
 	public void players() {
 		System.out.println("How many players?");
