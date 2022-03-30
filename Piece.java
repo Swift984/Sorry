@@ -1,21 +1,38 @@
 import java.util.Scanner;
 
 public class Piece {
-	public int color;
+	public String color;
 	public int pos;
 	public int steps;
 	public int move;
+	private int pieceX;
+	private int pieceY;
+
 	
-	public Piece(int c, int p, int s)
+	public Piece(String c, int x, int y)
 	{
-		c = color;
-		p = pos;
-		s = steps;
-		
+		color = c;
+		pieceX = x;
+		pieceY = y;
+	}
+	
+	
+	
+	public void move(String a)
+	{
+		if(a.equals("UP"))
+			pieceY = pieceY-1;
+		if(a.equals("DOWN"))
+			pieceY = pieceY+1;
+		if(a.equals("RIGHT"))
+			pieceX = pieceX+1;
+		if(a.equals("LEFT"))
+			pieceX = pieceX-1;
 	}
 	
 	public void move(int s)
 	{
+	
 		move = 0;
 		if(s == 0)
 		{
