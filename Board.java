@@ -53,6 +53,10 @@ public class Board extends JPanel implements Runnable , KeyListener
 		Green = new File("pawnGREEN.png");
 		
 		R1 = new Piece(Red, 11, 14);
+		R2 = new Piece(Red, 11, 13);
+		R3 = new Piece(Red, 11, 12);
+		R4 = new Piece(Red, 11, 11);
+		
 		
 		addKeyListener( this );
 		setFocusable( true );
@@ -73,6 +77,9 @@ public class Board extends JPanel implements Runnable , KeyListener
 		}
 		
 		drawPiece(R1, window);
+		drawPiece(R2, window);
+		drawPiece(R3, window);
+		drawPiece(R4, window);
 		
 		MouseX = MouseInfo.getPointerInfo().getLocation().x-getLocationOnScreen().x;
 		MouseY = MouseInfo.getPointerInfo().getLocation().y-getLocationOnScreen().y;
@@ -86,7 +93,7 @@ public class Board extends JPanel implements Runnable , KeyListener
 	{
 		
 		try {
-			g.drawImage(ImageIO.read(Red), 37+(p.getX()*75)+(p.getX()/3), 37+(p.getY()*75)+(p.getY()/3), 75, 75, null);
+			g.drawImage(ImageIO.read(p.getColor()), 37+(p.getX()*75)+(p.getX()/3), 37+(p.getY()*75)+(p.getY()/3), 75, 75, null);
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
