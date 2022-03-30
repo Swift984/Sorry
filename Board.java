@@ -19,9 +19,10 @@ public class Board extends JPanel implements Runnable , KeyListener
     private int MouseX;
     private int MouseY;
     
-    private int pieceX;
-    private int pieceY;
+    private int wowX;
+    private int wowY;
 	
+    private Piece R1;
 	
 	
 	public Board()
@@ -33,8 +34,9 @@ public class Board extends JPanel implements Runnable , KeyListener
 		Blue = new File("pawnBLUE.png");
 		Yellow = new File("pawnYELLOW.png");
 		Green = new File("pawnGREEN.png");
-		pieceX = 0;
-		pieceY = 0;
+		wowX = 0;
+		wowY = 0;
+		R1 = new Piece("Red", 11, 14);
 		
 		addKeyListener( this );
 		setFocusable( true );
@@ -48,11 +50,13 @@ public class Board extends JPanel implements Runnable , KeyListener
 		window.clearRect( 0,0, 1280, 1280);
 		try {
 			window.drawImage(ImageIO.read(BoardJPG), 0, 0, 1280, 1280, null);
-			window.drawImage(ImageIO.read(Red), 37+(pieceX*75)+(pieceX/3), 37+(pieceY*75)+(pieceY/3), 75, 75, null);
+			//window.drawImage(ImageIO.read(Red), 37+(wowX*75)+(wowX/3), 37+(wowY*75)+(wowY/3), 75, 75, null);
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+		
+		drawPiece(R1, window);
 		
 		MouseX = MouseInfo.getPointerInfo().getLocation().x-getLocationOnScreen().x;
 		MouseY = MouseInfo.getPointerInfo().getLocation().y-getLocationOnScreen().y;
@@ -62,6 +66,17 @@ public class Board extends JPanel implements Runnable , KeyListener
 		
 	}
 	
+	public void drawPiece(Piece p, Graphics g)
+	{
+		
+		try {
+			g.drawImage(ImageIO.read(Red), 37+(wowX*75)+(wowX/3), 37+(wowY*75)+(wowY/3), 75, 75, null);
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+	}
 	
 	public void run()
 	{
@@ -91,13 +106,13 @@ public class Board extends JPanel implements Runnable , KeyListener
 	public void keyReleased(KeyEvent e)
 	{
 		if(e.getKeyCode() == KeyEvent.VK_RIGHT )
-			pieceX = pieceX+1;
+			wowX = wowX+1;
 		if(e.getKeyCode() == KeyEvent.VK_LEFT )
-			pieceX = pieceX-1;
+			wowX = wowX-1;
 		if(e.getKeyCode() == KeyEvent.VK_DOWN )
-			pieceY = pieceY+1;
+			wowY = wowY+1;
 		if(e.getKeyCode() == KeyEvent.VK_UP )
-			pieceY = pieceY-1;
+			wowY = wowY-1;
 		
 	}
 
