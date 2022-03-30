@@ -18,8 +18,8 @@ public class Board extends JPanel implements Runnable , KeyListener
 	
     private int MouseX;
     private int MouseY;
-	
-    private Piece O;	//THIS IS THE SELECTED PIECE
+    
+    private int TURN;
     
     private Piece R1;
     private Piece R2;
@@ -52,6 +52,8 @@ public class Board extends JPanel implements Runnable , KeyListener
 		Yellow = new File("pawnYELLOW.png");
 		Green = new File("pawnGREEN.png");
 		
+		TURN = 1;
+		
 		R1 = new Piece(Red, 11, 14);
 		R2 = new Piece(Red, 11, 13);
 		R3 = new Piece(Red, 11, 12);
@@ -68,6 +70,7 @@ public class Board extends JPanel implements Runnable , KeyListener
 	public void paint( Graphics window )
 	{
 		window.clearRect( 0,0, 1280, 1280);
+		
 		try {
 			window.drawImage(ImageIO.read(BoardJPG), 0, 0, 1280, 1280, null);
 			//window.drawImage(ImageIO.read(Red), 37+(wowX*75)+(wowX/3), 37+(wowY*75)+(wowY/3), 75, 75, null);
@@ -84,7 +87,7 @@ public class Board extends JPanel implements Runnable , KeyListener
 		MouseX = MouseInfo.getPointerInfo().getLocation().x-getLocationOnScreen().x;
 		MouseY = MouseInfo.getPointerInfo().getLocation().y-getLocationOnScreen().y;
 		window.setColor(Color.BLACK);
-		window.drawString("Mouse  coordinates " + "(" + MouseX + "   " + MouseY + ")", 250, 30 );
+		window.drawString("Mouse  coordinates " + "(" + MouseX + "   " + MouseY + ")        " + TURN, 250, 30 );
 		
 		
 	}
@@ -137,6 +140,12 @@ public class Board extends JPanel implements Runnable , KeyListener
 		if(e.getKeyCode() == KeyEvent.VK_UP )
 			R1.move("UP");
 		
+		if(e.getKeyCode() == KeyEvent.VK_ENTER )
+		{
+			TURN = TURN + 1;
+			if(TURN > 4)
+				TURN = 1;
+		}
 	}
 
 	@Override
