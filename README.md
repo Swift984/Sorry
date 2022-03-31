@@ -1,2 +1,0 @@
-# Sorry
-Sorry! is a board game that is based on the ancient Indian cross and circle game Pachisi. Players move their three or four pieces around the board, attempting to get all of their pieces "home" before any other player. Originally manufactured by W.H. Storey &amp; Co in England and now by Hasbro, Sorry! is marketed for two to four players, ages 6 and up. The game title comes from the many ways in which a player can negate the progress of another, while issuing an apologetic "Sorry!"
