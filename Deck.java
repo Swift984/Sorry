@@ -4,10 +4,8 @@ public class Deck {
 	
 	private Stack<Card> deck = new Stack<Card>();
 	private Card[] rawDeck;
-	private Stack<Card> discard = new Stack<Card>();
 	
 	public Deck() {
-		discard = new Stack<Card>();
 		Reset();
 	}
 	
@@ -68,15 +66,7 @@ public class Deck {
 	}
 	
 	public Card poll() {
-		if(deck.isEmpty()) {
-			Reset();
-			discard = new Stack<Card>();
-		}
-		
-		Card c = deck.pop();
-		discard.add(c);
-		
-		return c;
+		return deck.pop();
 	}
 	
 	public Card peek() {
