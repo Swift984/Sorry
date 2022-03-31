@@ -1,3 +1,4 @@
+import java.io.*;
 
 public class Card {
 	private int moves;
@@ -12,5 +13,9 @@ public class Card {
 	
 	public String toString() {
 		return Integer.toString(moves);
+	}
+	
+	public File getGraphic() {
+		return new File(Integer.toString(moves) + "-Card.png");
 	}
 }
