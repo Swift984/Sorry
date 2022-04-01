@@ -66,7 +66,17 @@ public class Deck {
 	}
 	
 	public Card poll() {
+		if(deck.isEmpty())
+			Reset();
+		
 		return deck.pop();
+	}
+	
+	public Boolean isEmpty()
+	{
+		if(deck.isEmpty())
+			return true;
+		return false;
 	}
 	
 	public Card peek() {
