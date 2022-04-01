@@ -10,12 +10,14 @@ public class Piece {
 	private int pieceX;
 	private int pieceY;
 	private File color;
+	private int number;
 	
-	public Piece(File c, int x, int y)
+	public Piece(File c, int x, int y, int n)
 	{
 		color = c;
 		pieceX = x;
 		pieceY = y;
+		number = n;
 	}
 	
 	public int getX()
@@ -31,6 +33,11 @@ public class Piece {
 	public File getColor()
 	{
 		return color;
+	}
+	
+	public int getNumber()
+	{
+		return number;
 	}
 	
 	public boolean sameColor(Piece t)
