@@ -12,19 +12,18 @@ public class Board extends JPanel implements Runnable , KeyListener
 {
 	private File BoardJPG;
 	private File CardJPG;
+	
 	private File Red;
 	private File Blue;
 	private File Yellow;
 	private File Green;
 	
+	
     private int MouseX;
     private int MouseY;
-	
-    private Piece O;	//THIS IS THE SELECTED PIECE
     
+    private int nuts;
     private int TURN;
-    
-    private int nuts = 1;
     
     private Piece R1;
     private Piece R2;
@@ -45,20 +44,22 @@ public class Board extends JPanel implements Runnable , KeyListener
     private Piece G2;
     private Piece G3;
     private Piece G4;
+	
     
     private Deck Deck;
 	
-	
-    public Board()
+	public Board()
 	{
 		setBackground(Color.WHITE);
 		
 		BoardJPG = new File("gameboard.jpg");
+		CardJPG = new File("Back-Card.png");
 		Red = new File("pawnRED.png");
 		Blue = new File("pawnBLUE.png");
 		Yellow = new File("pawnYELLOW.png");
 		Green = new File("pawnGREEN.png");
 		
+		nuts = 1;
 		TURN = 1;
 		
 		R1 = new Piece(Red, 11, 14);
@@ -70,20 +71,18 @@ public class Board extends JPanel implements Runnable , KeyListener
 		B2 = new Piece(Blue, 2, 11);
 		B3 = new Piece(Blue, 3, 11);
 		B4 = new Piece(Blue, 4, 11);
-		
+
 		Y1 = new Piece(Yellow, 4, 1);
 		Y2 = new Piece(Yellow, 4, 2);
 		Y3 = new Piece(Yellow, 4, 3);
 		Y4 = new Piece(Yellow, 4, 4);
-		
+
 		G1 = new Piece(Green, 14, 4);
 		G2 = new Piece(Green, 13, 4);
 		G3 = new Piece(Green, 12, 4);
 		G4 = new Piece(Green, 11, 4);
-
 		
-
-		
+		Deck = new Deck();
 		
 		addKeyListener( this );
 		setFocusable( true );
@@ -98,10 +97,8 @@ public class Board extends JPanel implements Runnable , KeyListener
 		
 		try {
 			window.drawImage(ImageIO.read(BoardJPG), 0, 0, 1280, 1280, null);
-			window.drawImage(ImageIO.read(CardJPG), 557, 640-(267/2), 166, 267, null); 
-			//window.drawImage(ImageIO.read(Red), 37+(wowX*75)+(wowX/3), 37+(wowY*75)+(wowY/3), 75, 75, null);
+			window.drawImage(ImageIO.read(CardJPG), 557, 640-(267/2), 166, 267, null);
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		
@@ -109,26 +106,37 @@ public class Board extends JPanel implements Runnable , KeyListener
 		drawPiece(R2, window);
 		drawPiece(R3, window);
 		drawPiece(R4, window);
-		
+
 		drawPiece(B1, window);
 		drawPiece(B2, window);
 		drawPiece(B3, window);
 		drawPiece(B4, window);
-		
+
 		drawPiece(Y1, window);
 		drawPiece(Y2, window);
 		drawPiece(Y3, window);
 		drawPiece(Y4, window);
-		
+
 		drawPiece(G1, window);
 		drawPiece(G2, window);
 		drawPiece(G3, window);
 		drawPiece(G4, window);
 		
+		window.setColor(Color.BLACK);
 		MouseX = MouseInfo.getPointerInfo().getLocation().x-getLocationOnScreen().x;
 		MouseY = MouseInfo.getPointerInfo().getLocation().y-getLocationOnScreen().y;
-		window.setColor(Color.BLACK);
-		window.drawString("Mouse  coordinates " + "(" + MouseX + "   " + MouseY + ")        " + TURN, 250 ,30 );
+		window.drawString("Mouse  coordinates " + "(" + MouseX + "   " + MouseY + ")", 20, 30 );
+		window.fillRect( 565, 7, 150, 25);
+		window.setFont( new Font("Calibri", 1, 18) );
+		if(TURN == 1)
+			window.setColor(Color.RED);
+		if(TURN == 2)
+			window.setColor(Color.BLUE);
+		if(TURN == 3)
+			window.setColor(Color.YELLOW);
+		if(TURN == 4)
+			window.setColor(Color.GREEN);
+		window.drawString("Pawn " + nuts + " is selected", 572, 25 );
 		
 		
 	}
@@ -163,7 +171,6 @@ public class Board extends JPanel implements Runnable , KeyListener
 	
 	
 	
-	
 	@Override
 	public void keyPressed(KeyEvent arg0) {
 		// TODO Auto-generated method stub
@@ -188,7 +195,7 @@ public class Board extends JPanel implements Runnable , KeyListener
 				if(e.getKeyCode() == KeyEvent.VK_UP )
 						R1.move("UP");
 			}
-		
+
 			if(nuts == 2)
 			{
 				if(e.getKeyCode() == KeyEvent.VK_RIGHT )
@@ -200,7 +207,7 @@ public class Board extends JPanel implements Runnable , KeyListener
 				if(e.getKeyCode() == KeyEvent.VK_UP )
 						R2.move("UP");
 			}
-		
+
 			if(nuts == 3)
 			{
 				if(e.getKeyCode() == KeyEvent.VK_RIGHT )
@@ -212,7 +219,7 @@ public class Board extends JPanel implements Runnable , KeyListener
 				if(e.getKeyCode() == KeyEvent.VK_UP )
 						R3.move("UP");
 			}
-		
+
 			if(nuts == 4)
 			{
 				if(e.getKeyCode() == KeyEvent.VK_RIGHT )
@@ -224,7 +231,8 @@ public class Board extends JPanel implements Runnable , KeyListener
 				if(e.getKeyCode() == KeyEvent.VK_UP )
 						R4.move("UP");
 			}
-		}	
+		}
+		
 		//Blue
 		if(TURN == 2)
 		{
@@ -239,7 +247,7 @@ public class Board extends JPanel implements Runnable , KeyListener
 				if(e.getKeyCode() == KeyEvent.VK_UP )
 						B1.move("UP");
 			}
-		
+
 			if(nuts == 2)
 			{
 				if(e.getKeyCode() == KeyEvent.VK_RIGHT )
@@ -251,7 +259,7 @@ public class Board extends JPanel implements Runnable , KeyListener
 				if(e.getKeyCode() == KeyEvent.VK_UP )
 						B2.move("UP");
 			}
-		
+
 			if(nuts == 3)
 			{
 				if(e.getKeyCode() == KeyEvent.VK_RIGHT )
@@ -263,7 +271,7 @@ public class Board extends JPanel implements Runnable , KeyListener
 				if(e.getKeyCode() == KeyEvent.VK_UP )
 						B3.move("UP");
 			}
-		
+
 			if(nuts == 4)
 			{
 				if(e.getKeyCode() == KeyEvent.VK_RIGHT )
@@ -275,10 +283,9 @@ public class Board extends JPanel implements Runnable , KeyListener
 				if(e.getKeyCode() == KeyEvent.VK_UP )
 						B4.move("UP");
 			}
-		}	
+		}
 		
-		
-		//yellow
+		//Yellow
 		if(TURN == 3)
 		{
 			if(nuts == 1)
@@ -292,7 +299,7 @@ public class Board extends JPanel implements Runnable , KeyListener
 				if(e.getKeyCode() == KeyEvent.VK_UP )
 						Y1.move("UP");
 			}
-		
+
 			if(nuts == 2)
 			{
 				if(e.getKeyCode() == KeyEvent.VK_RIGHT )
@@ -304,7 +311,7 @@ public class Board extends JPanel implements Runnable , KeyListener
 				if(e.getKeyCode() == KeyEvent.VK_UP )
 						Y2.move("UP");
 			}
-		
+
 			if(nuts == 3)
 			{
 				if(e.getKeyCode() == KeyEvent.VK_RIGHT )
@@ -316,7 +323,7 @@ public class Board extends JPanel implements Runnable , KeyListener
 				if(e.getKeyCode() == KeyEvent.VK_UP )
 						Y3.move("UP");
 			}
-		
+
 			if(nuts == 4)
 			{
 				if(e.getKeyCode() == KeyEvent.VK_RIGHT )
@@ -328,10 +335,9 @@ public class Board extends JPanel implements Runnable , KeyListener
 				if(e.getKeyCode() == KeyEvent.VK_UP )
 						Y4.move("UP");
 			}
-		}	
+		}
 		
-		
-		//green
+		//Green
 		if(TURN == 4)
 		{
 			if(nuts == 1)
@@ -345,7 +351,7 @@ public class Board extends JPanel implements Runnable , KeyListener
 				if(e.getKeyCode() == KeyEvent.VK_UP )
 						G1.move("UP");
 			}
-		
+
 			if(nuts == 2)
 			{
 				if(e.getKeyCode() == KeyEvent.VK_RIGHT )
@@ -357,7 +363,7 @@ public class Board extends JPanel implements Runnable , KeyListener
 				if(e.getKeyCode() == KeyEvent.VK_UP )
 						G2.move("UP");
 			}
-		
+
 			if(nuts == 3)
 			{
 				if(e.getKeyCode() == KeyEvent.VK_RIGHT )
@@ -369,7 +375,7 @@ public class Board extends JPanel implements Runnable , KeyListener
 				if(e.getKeyCode() == KeyEvent.VK_UP )
 						G3.move("UP");
 			}
-		
+
 			if(nuts == 4)
 			{
 				if(e.getKeyCode() == KeyEvent.VK_RIGHT )
@@ -381,37 +387,22 @@ public class Board extends JPanel implements Runnable , KeyListener
 				if(e.getKeyCode() == KeyEvent.VK_UP )
 						G4.move("UP");
 			}
-		}	
-			
+		}
 		
+		if(e.getKeyCode() == KeyEvent.VK_1 )
+			nuts = 1;
+		if(e.getKeyCode() == KeyEvent.VK_2 )
+			nuts = 2;
+		if(e.getKeyCode() == KeyEvent.VK_3 )
+			nuts = 3;
+		if(e.getKeyCode() == KeyEvent.VK_4 )
+			nuts = 4;
 		
 		if(e.getKeyCode() == KeyEvent.VK_ENTER )
 		{
 			TURN = TURN + 1;
-			nuts = 1;
 			if(TURN > 4)
 				TURN = 1;
-		}
-		
-		
-		if(e.getKeyCode() == KeyEvent.VK_1 )
-		{
-			nuts = 1;
-		}
-		
-		if(e.getKeyCode() == KeyEvent.VK_2 )
-		{
-			nuts = 2;
-		}
-		
-		if(e.getKeyCode() == KeyEvent.VK_3 )
-		{
-			nuts = 3;
-		}
-		
-		if(e.getKeyCode() == KeyEvent.VK_4 )
-		{
-			nuts = 4;
 		}
 		
 		if(e.getKeyCode() == KeyEvent.VK_SEMICOLON )
