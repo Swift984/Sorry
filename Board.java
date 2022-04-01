@@ -11,43 +11,46 @@ import javax.imageio.*;
 public class Board extends JPanel implements Runnable , KeyListener
 {
 	private File BoardJPG;
+	private File CardJPG;
 	private File Red;
 	private File Blue;
 	private File Yellow;
 	private File Green;
 	
-    private int MouseX;
-    private int MouseY;
-    
-    private int SELECT;
-    private int TURN;
-    
-    private Piece R1;
-    private Piece R2;
-    private Piece R3;
-    private Piece R4;
-    
-    private Piece B1;
-    private Piece B2;
-    private Piece B3;
-    private Piece B4;
-    
-    private Piece Y1;
-    private Piece Y2;
-    private Piece Y3;
-    private Piece Y4;
-    
-    private Piece G1;
-    private Piece G2;
-    private Piece G3;
-    private Piece G4;
+	private int MouseX;
+	private int MouseY;
 	
+	private int SELECT;
+	private int TURN;
+	
+	private Piece R1;
+	private Piece R2;
+	private Piece R3;
+	private Piece R4;
+	
+	private Piece B1;
+	private Piece B2;
+	private Piece B3;
+	private Piece B4;
+	
+	private Piece Y1;
+	private Piece Y2;
+	private Piece Y3;
+	private Piece Y4;
+	
+	private Piece G1;
+	private Piece G2;
+	private Piece G3;
+	private Piece G4;
+	
+	private Deck Deck;
 	
 	public Board()
 	{
 		setBackground(Color.WHITE);
 		
 		BoardJPG = new File("gameboard.jpg");
+		CardJPG = new File("Back-Card.png");
 		Red = new File("pawnRED.png");
 		Blue = new File("pawnBLUE.png");
 		Yellow = new File("pawnYELLOW.png");
@@ -56,25 +59,27 @@ public class Board extends JPanel implements Runnable , KeyListener
 		SELECT = 1;
 		TURN = 1;
 		
-		R1 = new Piece(Red, 11, 14);
-		R2 = new Piece(Red, 11, 13);
-		R3 = new Piece(Red, 11, 12);
-		R4 = new Piece(Red, 11, 11);
+		R1 = new Piece(Red, 11, 14, 1);
+		R2 = new Piece(Red, 11, 14, 2);
+		R3 = new Piece(Red, 11, 14, 3);
+		R4 = new Piece(Red, 11, 14, 4);
 		
-		B1 = new Piece(Blue, 1, 11);
-		B2 = new Piece(Blue, 2, 11);
-		B3 = new Piece(Blue, 3, 11);
-		B4 = new Piece(Blue, 4, 11);
+		B1 = new Piece(Blue, 1, 11, 1);
+		B2 = new Piece(Blue, 1, 11, 2);
+		B3 = new Piece(Blue, 1, 11, 3);
+		B4 = new Piece(Blue, 1, 11, 4);
 
-		Y1 = new Piece(Yellow, 4, 1);
-		Y2 = new Piece(Yellow, 4, 2);
-		Y3 = new Piece(Yellow, 4, 3);
-		Y4 = new Piece(Yellow, 4, 4);
+		Y1 = new Piece(Yellow, 4, 1, 1);
+		Y2 = new Piece(Yellow, 4, 1, 2);
+		Y3 = new Piece(Yellow, 4, 1, 3);
+		Y4 = new Piece(Yellow, 4, 1, 4);
 
-		G1 = new Piece(Green, 14, 4);
-		G2 = new Piece(Green, 13, 4);
-		G3 = new Piece(Green, 12, 4);
-		G4 = new Piece(Green, 11, 4);
+		G1 = new Piece(Green, 14, 4, 1);
+		G2 = new Piece(Green, 14, 4, 2);
+		G3 = new Piece(Green, 14, 4, 3);
+		G4 = new Piece(Green, 14, 4, 4);
+		
+		Deck = new Deck();
 		
 		addKeyListener( this );
 		setFocusable( true );
@@ -89,6 +94,7 @@ public class Board extends JPanel implements Runnable , KeyListener
 		
 		try {
 			window.drawImage(ImageIO.read(BoardJPG), 0, 0, 1280, 1280, null);
+			window.drawImage(ImageIO.read(CardJPG), 557, 640-(267/2), 166, 267, null);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -395,6 +401,9 @@ public class Board extends JPanel implements Runnable , KeyListener
 			if(TURN > 4)
 				TURN = 1;
 		}
+		
+		if(e.getKeyCode() == KeyEvent.VK_SPACE )
+			CardJPG = Deck.poll().getGraphic();
 	}
 
 	@Override
