@@ -12,7 +12,6 @@ public class Board extends JPanel implements Runnable , KeyListener
 {
 	public static int DEFAULT_X = 730;
 	public static int DEFAULT_Y = 640-(267/2);
-	
 	private File BoardJPG;
 	private File CardJPG;
 	
@@ -21,6 +20,7 @@ public class Board extends JPanel implements Runnable , KeyListener
 	private File Yellow;
 	private File Green;
 	
+
 	private File back;
 	
     private int MouseX;
@@ -51,6 +51,7 @@ public class Board extends JPanel implements Runnable , KeyListener
     
     private int cardx = 1;
     private int cardy = 1;
+
     
     private int Ax = 730;
     
@@ -62,6 +63,7 @@ public class Board extends JPanel implements Runnable , KeyListener
     private Deck Deck;
     
     private ArrayList<Card> usedCards;
+
 	
 	public Board()
 	{
@@ -115,21 +117,25 @@ public class Board extends JPanel implements Runnable , KeyListener
 		
 		try {
 			window.drawImage(ImageIO.read(BoardJPG), 0, 0, 1280, 1280, null);
-			window.drawImage(ImageIO.read(back), 730, 640-(267/2), Cx, Cy, null);
-			
+
+			if(!Deck.isEmpty())
+				window.drawImage(ImageIO.read(back), 730, 640-(267/2), Cx, Cy, null);
+
 			for(Card c : usedCards) {
 				CardJPG = c.getGraphic();
 				
 				if(c.isAnim && c.x > 380)
 					c.x -= 50;
-				
-				window.drawImage(ImageIO.read(CardJPG), c.x, c.y, cardx, cardy, null);
+          
+				if(Deck.size() != 45)
+				  window.drawImage(ImageIO.read(CardJPG), c.x, c.y, cardx, cardy, null);
 			}
 			
 			
 		
 			
-			
+
+
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -191,7 +197,9 @@ public class Board extends JPanel implements Runnable , KeyListener
 		{
 			while( true )
 			{	
-			   Thread.sleep(1);
+
+			   Thread.sleep(50);
+
 			   repaint();
 			}
 		}
@@ -201,7 +209,16 @@ public class Board extends JPanel implements Runnable , KeyListener
 		}
 	}
 	
-	
+
+	public void shuffle()
+	{
+		if(Deck.isEmpty())
+		{
+			back = new File("trans.png");
+		}
+		
+	}
+
 	
 	@Override
 	public void keyPressed(KeyEvent arg0) {
@@ -430,6 +447,17 @@ public class Board extends JPanel implements Runnable , KeyListener
 		if(e.getKeyCode() == KeyEvent.VK_4 )
 			nuts = 4;
 		
+
+		
+		
+		if(e.getKeyCode() == KeyEvent.VK_S )
+		{
+			Deck.Reset();
+		}
+		
+		
+		
+
 		if(e.getKeyCode() == KeyEvent.VK_ENTER )
 		{
 			TURN = TURN + 1;
@@ -437,6 +465,7 @@ public class Board extends JPanel implements Runnable , KeyListener
 				TURN = 1;
 		}
 		
+
 		if(e.getKeyCode() == KeyEvent.VK_SPACE )
 		{
 			cardx = 166;
