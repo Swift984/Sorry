@@ -1,23 +1,19 @@
-import java.awt.*;
-import javax.sound.*;
-import javax.swing.*;
-import java.util.*;
-import java.io.*;
-import javax.imageio.*;
+import java.io.File;
+import java.util.Scanner;
 
 public class Piece {
-	
+	public int pos;
+	public int steps;
+	public int move;
 	private int pieceX;
 	private int pieceY;
 	private File color;
-	private int number;
 	
-	public Piece(File c, int x, int y, int n)
+	public Piece(File c, int x, int y)
 	{
 		color = c;
 		pieceX = x;
 		pieceY = y;
-		number = n;
 	}
 	
 	public int getX()
@@ -35,10 +31,6 @@ public class Piece {
 		return color;
 	}
 	
-	public int getNumber()
-	{
-		return number;
-	}
 	
 	public boolean sameColor(Piece t)
 	{
@@ -57,5 +49,8 @@ public class Piece {
 			pieceX = pieceX+1;
 		if(a.equals("LEFT"))
 			pieceX = pieceX-1;
-	}
+	}	
+	
+	
+	
 }

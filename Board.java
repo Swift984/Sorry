@@ -10,6 +10,8 @@ import javax.imageio.*;
 
 public class Board extends JPanel implements Runnable , KeyListener
 {
+	public static int DEFAULT_X = 730;
+	public static int DEFAULT_Y = 640-(267/2);
 	private File BoardJPG;
 	private File CardJPG;
 	
@@ -18,6 +20,8 @@ public class Board extends JPanel implements Runnable , KeyListener
 	private File Yellow;
 	private File Green;
 	
+
+	private File back;
 	
     private int MouseX;
     private int MouseY;
@@ -44,16 +48,30 @@ public class Board extends JPanel implements Runnable , KeyListener
     private Piece G2;
     private Piece G3;
     private Piece G4;
-	
+    
+    private int cardx = 1;
+    private int cardy = 1;
+
+    
+    private int Ax = 730;
+    
+    private int Cx = 166;
+    private int Cy = 267;
+    
+    private Boolean anim = false;
     
     private Deck Deck;
+    
+    private ArrayList<Card> usedCards;
+
 	
 	public Board()
 	{
 		setBackground(Color.WHITE);
 		
 		BoardJPG = new File("gameboard.jpg");
-		CardJPG = new File("Back-Card.png");
+		CardJPG = new File("trans.png");
+		back = new File("Back-Card.png");
 		Red = new File("pawnRED.png");
 		Blue = new File("pawnBLUE.png");
 		Yellow = new File("pawnYELLOW.png");
@@ -61,26 +79,28 @@ public class Board extends JPanel implements Runnable , KeyListener
 		
 		nuts = 1;
 		TURN = 1;
+
+		usedCards = new ArrayList<Card>();
 		
 		R1 = new Piece(Red, 11, 14);
-		R2 = new Piece(Red, 11, 13);
-		R3 = new Piece(Red, 11, 12);
-		R4 = new Piece(Red, 11, 11);
+		R2 = new Piece(Red, 11, 14);
+		R3 = new Piece(Red, 11, 14);
+		R4 = new Piece(Red, 11, 14);
 		
 		B1 = new Piece(Blue, 1, 11);
-		B2 = new Piece(Blue, 2, 11);
-		B3 = new Piece(Blue, 3, 11);
-		B4 = new Piece(Blue, 4, 11);
+		B2 = new Piece(Blue, 1, 11);
+		B3 = new Piece(Blue, 1, 11);
+		B4 = new Piece(Blue, 1, 11);
 
 		Y1 = new Piece(Yellow, 4, 1);
-		Y2 = new Piece(Yellow, 4, 2);
-		Y3 = new Piece(Yellow, 4, 3);
-		Y4 = new Piece(Yellow, 4, 4);
+		Y2 = new Piece(Yellow, 4, 1);
+		Y3 = new Piece(Yellow, 4, 1);
+		Y4 = new Piece(Yellow, 4, 1);
 
 		G1 = new Piece(Green, 14, 4);
-		G2 = new Piece(Green, 13, 4);
-		G3 = new Piece(Green, 12, 4);
-		G4 = new Piece(Green, 11, 4);
+		G2 = new Piece(Green, 14, 4);
+		G3 = new Piece(Green, 14, 4);
+		G4 = new Piece(Green, 14, 4);
 		
 		Deck = new Deck();
 		
@@ -97,7 +117,25 @@ public class Board extends JPanel implements Runnable , KeyListener
 		
 		try {
 			window.drawImage(ImageIO.read(BoardJPG), 0, 0, 1280, 1280, null);
-			window.drawImage(ImageIO.read(CardJPG), 557, 640-(267/2), 166, 267, null);
+
+			if(!Deck.isEmpty())
+				window.drawImage(ImageIO.read(back), 730, 640-(267/2), Cx, Cy, null);
+
+			for(Card c : usedCards) {
+				CardJPG = c.getGraphic();
+				
+				if(c.isAnim && c.x > 380)
+					c.x -= 50;
+          
+				if(Deck.size() != 45)
+				  window.drawImage(ImageIO.read(CardJPG), c.x, c.y, cardx, cardy, null);
+			}
+			
+			
+		
+			
+
+
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -159,7 +197,9 @@ public class Board extends JPanel implements Runnable , KeyListener
 		{
 			while( true )
 			{	
+
 			   Thread.sleep(50);
+
 			   repaint();
 			}
 		}
@@ -169,7 +209,16 @@ public class Board extends JPanel implements Runnable , KeyListener
 		}
 	}
 	
-	
+
+	public void shuffle()
+	{
+		if(Deck.isEmpty())
+		{
+			back = new File("trans.png");
+		}
+		
+	}
+
 	
 	@Override
 	public void keyPressed(KeyEvent arg0) {
@@ -398,6 +447,17 @@ public class Board extends JPanel implements Runnable , KeyListener
 		if(e.getKeyCode() == KeyEvent.VK_4 )
 			nuts = 4;
 		
+
+		
+		
+		if(e.getKeyCode() == KeyEvent.VK_S )
+		{
+			Deck.Reset();
+		}
+		
+		
+		
+
 		if(e.getKeyCode() == KeyEvent.VK_ENTER )
 		{
 			TURN = TURN + 1;
@@ -405,8 +465,16 @@ public class Board extends JPanel implements Runnable , KeyListener
 				TURN = 1;
 		}
 		
-		if(e.getKeyCode() == KeyEvent.VK_SEMICOLON )
-			CardJPG = Deck.poll().getGraphic();
+
+		if(e.getKeyCode() == KeyEvent.VK_SPACE )
+		{
+			cardx = 166;
+			cardy = 267;
+			
+			Card c = Deck.poll();
+			c.isAnim = true;
+			usedCards.add(c);
+		}
 	}
 
 	@Override
