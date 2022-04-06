@@ -1,9 +1,9 @@
 import java.awt.*;
-
 import javax.sound.sampled.UnsupportedAudioFileException;
 import javax.swing.*;
 import java.util.*;
 import java.io.*;
+
 
 public class Sorry extends JFrame
 {
@@ -24,6 +24,9 @@ public class Sorry extends JFrame
 
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 	}
+	
+	
+	
 	
 	public static void main( String args[] ) throws IOException
 	{

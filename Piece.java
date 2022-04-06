@@ -11,7 +11,7 @@ public class Piece {
 	private int pieceY;
 	private File color;
 	private int number;
-	
+	=
 	public Piece(File c, int x, int y, int n)
 	{
 		color = c;

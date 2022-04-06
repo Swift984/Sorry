@@ -16,6 +16,8 @@ public class Board extends JPanel implements Runnable , KeyListener
 	private File BoardJPG;
 	private File CardJPG;
 	
+	private File InstructionJPG;
+
 	private File Red;
 	private File Blue;
 	private File Yellow;
@@ -53,6 +55,7 @@ public class Board extends JPanel implements Runnable , KeyListener
 	private int cardy = 1;
 	
 	private int Ax = 730;
+  
 	private int Cx = 166;
 	private int Cy = 267;
 	
@@ -62,12 +65,15 @@ public class Board extends JPanel implements Runnable , KeyListener
 	
 	private ArrayList<Card> usedCards;
 	
+	private Boolean showInstructions = false;
+	
 	public Board()
 	{
 		setBackground(Color.WHITE);
 		
 		BoardJPG = new File("gameboard.jpg");
 		CardJPG = new File("trans.png");
+		InstructionJPG = new File("Instructions.png");
 		back = new File("Back-Card.png");
 		Red = new File("pawnRED.png");
 		Blue = new File("pawnBLUE.png");
@@ -151,6 +157,13 @@ public class Board extends JPanel implements Runnable , KeyListener
 		drawPiece(G2, window);
 		drawPiece(G1, window);
 		
+		try {
+			if(showInstructions)
+				window.drawImage(ImageIO.read(InstructionJPG), 0, 0, 1280, 1280, null);
+		} catch(IOException e) {
+			
+		}
+		
 		window.setColor(Color.BLACK);
 		MouseX = MouseInfo.getPointerInfo().getLocation().x-getLocationOnScreen().x;
 		MouseY = MouseInfo.getPointerInfo().getLocation().y-getLocationOnScreen().y;
@@ -190,7 +203,7 @@ public class Board extends JPanel implements Runnable , KeyListener
 		try
 		{
 			while( true )
-			{	
+			{
 			   Thread.sleep(100);
 			   repaint();
 			}
@@ -219,6 +232,9 @@ public class Board extends JPanel implements Runnable , KeyListener
 	@Override
 	public void keyReleased(KeyEvent e)
 	{
+		
+		if(e.getKeyCode() == KeyEvent.VK_F1)
+			showInstructions = !showInstructions;
 		
 		//Red
 		if(TURN == 1)
