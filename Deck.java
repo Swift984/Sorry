@@ -65,11 +65,19 @@ public class Deck {
 	    }
 	}
 	
+	
 	public Card poll() {
+
+		if(!deck.isEmpty())
+			return deck.pop();
+		return null;
+	}
+  
+	public Boolean isEmpty()
+	{
 		if(deck.isEmpty())
-			Reset();
-		
-		return deck.pop();
+			return true;
+		return false;
 	}
 	
 	public Card peek() {

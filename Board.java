@@ -10,12 +10,18 @@ import javax.imageio.*;
 
 public class Board extends JPanel implements Runnable , KeyListener
 {
+	public static int DEFAULT_X = 730;
+	public static int DEFAULT_Y = 640-(267/2);
+	
 	private File BoardJPG;
 	private File CardJPG;
+	
 	private File Red;
 	private File Blue;
 	private File Yellow;
 	private File Green;
+	
+	private File back;
 	
 	private int MouseX;
 	private int MouseY;
@@ -43,14 +49,26 @@ public class Board extends JPanel implements Runnable , KeyListener
 	private Piece G3;
 	private Piece G4;
 	
+	private int cardx = 1;
+	private int cardy = 1;
+	
+	private int Ax = 730;
+	private int Cx = 166;
+	private int Cy = 267;
+	
+	private Boolean anim = false;
+	
 	private Deck Deck;
+	
+	private ArrayList<Card> usedCards;
 	
 	public Board()
 	{
 		setBackground(Color.WHITE);
 		
 		BoardJPG = new File("gameboard.jpg");
-		CardJPG = new File("Back-Card.png");
+		CardJPG = new File("trans.png");
+		back = new File("Back-Card.png");
 		Red = new File("pawnRED.png");
 		Blue = new File("pawnBLUE.png");
 		Yellow = new File("pawnYELLOW.png");
@@ -58,6 +76,8 @@ public class Board extends JPanel implements Runnable , KeyListener
 		
 		SELECT = 1;
 		TURN = 1;
+		
+		usedCards = new ArrayList<Card>();
 		
 		R1 = new Piece(Red, 11, 14, 1);
 		R2 = new Piece(Red, 11, 14, 2);
@@ -94,34 +114,47 @@ public class Board extends JPanel implements Runnable , KeyListener
 		
 		try {
 			window.drawImage(ImageIO.read(BoardJPG), 0, 0, 1280, 1280, null);
-			window.drawImage(ImageIO.read(CardJPG), 557, 640-(267/2), 166, 267, null);
+			
+			if(!Deck.isEmpty())
+				window.drawImage(ImageIO.read(back), 730, 640-(267/2), Cx, Cy, null);
+
+			for(Card c : usedCards) {
+				CardJPG = c.getGraphic();
+				
+				if(c.isAnim && c.x > 380)
+					c.x -= 50;
+          
+				if(Deck.size() != 45)
+					window.drawImage(ImageIO.read(CardJPG), c.x, c.y, cardx, cardy, null);
+			}
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
 		
-		drawPiece(R1, window);
-		drawPiece(R2, window);
-		drawPiece(R3, window);
 		drawPiece(R4, window);
-
-		drawPiece(B1, window);
-		drawPiece(B2, window);
-		drawPiece(B3, window);
+		drawPiece(R3, window);
+		drawPiece(R2, window);
+		drawPiece(R1, window);
+		
 		drawPiece(B4, window);
-
-		drawPiece(Y1, window);
-		drawPiece(Y2, window);
-		drawPiece(Y3, window);
+		drawPiece(B3, window);
+		drawPiece(B2, window);
+		drawPiece(B1, window);
+		
 		drawPiece(Y4, window);
-
-		drawPiece(G1, window);
-		drawPiece(G2, window);
-		drawPiece(G3, window);
+		drawPiece(Y3, window);
+		drawPiece(Y2, window);
+		drawPiece(Y1, window);
+		
 		drawPiece(G4, window);
+		drawPiece(G3, window);
+		drawPiece(G2, window);
+		drawPiece(G1, window);
 		
 		window.setColor(Color.BLACK);
 		MouseX = MouseInfo.getPointerInfo().getLocation().x-getLocationOnScreen().x;
 		MouseY = MouseInfo.getPointerInfo().getLocation().y-getLocationOnScreen().y;
+		window.setFont( new Font("Arial", 0, 12) );
 		window.drawString("Mouse  coordinates " + "(" + MouseX + "   " + MouseY + ")", 20, 30 );
 		window.fillRect( 565, 7, 150, 25);
 		window.setFont( new Font("Calibri", 1, 18) );
@@ -143,6 +176,8 @@ public class Board extends JPanel implements Runnable , KeyListener
 		
 		try {
 			g.drawImage(ImageIO.read(p.getColor()), 37+(p.getX()*75)+(p.getX()/3), 37+(p.getY()*75)+(p.getY()/3), 75, 75, null);
+			g.setFont( new Font("Calibri", 1, 30) );
+			g.drawString("" + p.getNumber() + " ", 37+(p.getX()*75)+(p.getX()/3)+30, 37+(p.getY()*75)+(p.getY()/3)+65 );
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -156,7 +191,7 @@ public class Board extends JPanel implements Runnable , KeyListener
 		{
 			while( true )
 			{	
-			   Thread.sleep(50);
+			   Thread.sleep(100);
 			   repaint();
 			}
 		}
@@ -166,7 +201,14 @@ public class Board extends JPanel implements Runnable , KeyListener
 		}
 	}
 	
-	
+	public void shuffle()
+	{
+		if(Deck.isEmpty())
+		{
+			back = new File("trans.png");
+		}
+		
+	}
 	
 	@Override
 	public void keyPressed(KeyEvent arg0) {
@@ -395,6 +437,12 @@ public class Board extends JPanel implements Runnable , KeyListener
 		if(e.getKeyCode() == KeyEvent.VK_4 )
 			SELECT = 4;
 		
+		if(e.getKeyCode() == KeyEvent.VK_S && Deck.size() == 0 )
+		{
+			usedCards.clear();
+			Deck.Reset();
+		}
+		
 		if(e.getKeyCode() == KeyEvent.VK_ENTER )
 		{
 			TURN = TURN + 1;
@@ -402,8 +450,16 @@ public class Board extends JPanel implements Runnable , KeyListener
 				TURN = 1;
 		}
 		
-		if(e.getKeyCode() == KeyEvent.VK_SPACE )
-			CardJPG = Deck.poll().getGraphic();
+		if(e.getKeyCode() == KeyEvent.VK_SPACE && Deck.size() != 0 )
+		{
+			cardx = 166;
+			cardy = 267;
+			
+			Card c = Deck.poll();
+			c.isAnim = true;
+			usedCards.add(c);
+		}
+		
 	}
 
 	@Override
