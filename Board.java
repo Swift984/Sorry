@@ -12,8 +12,11 @@ public class Board extends JPanel implements Runnable , KeyListener
 {
 	public static int DEFAULT_X = 730;
 	public static int DEFAULT_Y = 640-(267/2);
+	
 	private File BoardJPG;
 	private File CardJPG;
+	
+	private File InstructionJPG;
 	
 	private File Red;
 	private File Blue;
@@ -63,6 +66,8 @@ public class Board extends JPanel implements Runnable , KeyListener
     private Deck Deck;
     
     private ArrayList<Card> usedCards;
+    
+    private Boolean showInstructions = false;
 
 	
 	public Board()
@@ -71,6 +76,7 @@ public class Board extends JPanel implements Runnable , KeyListener
 		
 		BoardJPG = new File("gameboard.jpg");
 		CardJPG = new File("trans.png");
+		InstructionJPG = new File("Instructions.png");
 		back = new File("Back-Card.png");
 		Red = new File("pawnRED.png");
 		Blue = new File("pawnBLUE.png");
@@ -132,6 +138,7 @@ public class Board extends JPanel implements Runnable , KeyListener
 			}
 			
 			
+			
 		
 			
 
@@ -159,6 +166,13 @@ public class Board extends JPanel implements Runnable , KeyListener
 		drawPiece(G2, window);
 		drawPiece(G3, window);
 		drawPiece(G4, window);
+		
+		try {
+			if(showInstructions)
+				window.drawImage(ImageIO.read(InstructionJPG), 0, 0, 1280, 1280, null);
+		} catch(IOException e) {
+			
+		}
 		
 		window.setColor(Color.BLACK);
 		MouseX = MouseInfo.getPointerInfo().getLocation().x-getLocationOnScreen().x;
@@ -230,6 +244,9 @@ public class Board extends JPanel implements Runnable , KeyListener
 	public void keyReleased(KeyEvent e)
 	{
 		
+		if(e.getKeyCode() == KeyEvent.VK_F1)
+			showInstructions = !showInstructions;
+		
 		//Red
 		if(TURN == 1)
 		{
@@ -280,7 +297,7 @@ public class Board extends JPanel implements Runnable , KeyListener
 				if(e.getKeyCode() == KeyEvent.VK_UP )
 						R4.move("UP");
 			}
-		}
+		} //
 		
 		//Blue
 		if(TURN == 2)
@@ -450,8 +467,9 @@ public class Board extends JPanel implements Runnable , KeyListener
 
 		
 		
-		if(e.getKeyCode() == KeyEvent.VK_S )
+		if(e.getKeyCode() == KeyEvent.VK_S && Deck.size() == 0)
 		{
+			usedCards.clear();
 			Deck.Reset();
 		}
 		
