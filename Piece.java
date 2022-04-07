@@ -1,19 +1,27 @@
-import java.io.File;
-import java.util.Scanner;
+
+import java.awt.*;
+import javax.sound.*;
+import javax.swing.*;
+import java.util.*;
+import java.io.*;
+import javax.imageio.*;
 
 public class Piece {
-	public int pos;
-	public int steps;
-	public int move;
+	
 	private int pieceX;
 	private int pieceY;
 	private File color;
+	private int number;
 	
-	public Piece(File c, int x, int y)
+	public Piece(File c, int x, int y, int n)
+
 	{
 		color = c;
 		pieceX = x;
 		pieceY = y;
+
+		number = n;
+
 	}
 	
 	public int getX()
@@ -30,7 +38,12 @@ public class Piece {
 	{
 		return color;
 	}
-	
+
+	public int getNumber()
+	{
+		return number;
+	}
+
 	
 	public boolean sameColor(Piece t)
 	{
@@ -39,18 +52,41 @@ public class Piece {
 		return false;
 	}
 	
+
+	public void gotoStart()
+	{
+		if(this.color.equals(new File("pawnRED.png")))
+		{
+			pieceX = 11;
+			pieceY = 14;
+		}
+		if(this.color.equals(new File("pawnBLUE.png")))
+		{
+			pieceX = 1;
+			pieceY = 11;
+		}
+		if(this.color.equals(new File("pawnYELLOW.png")))
+		{
+			pieceX = 4;
+			pieceY = 1;
+		}
+		if(this.color.equals(new File("pawnGREEN.png")))
+		{
+			pieceX = 14;
+			pieceY = 4;
+		}
+	}
+	
 	public void move(String a)
 	{
-		if(a.equals("UP"))
+		if(a.equals("UP") && ((pieceY-1>=0 && (pieceX==0 || pieceX==15)) || ((pieceY-1>=9 && pieceY-1<=15) && pieceX==13) || ((pieceY-1<=6 && pieceY-1>=0) && pieceX==2) || (pieceY-1==0 && pieceX==4)) )
 			pieceY = pieceY-1;
-		if(a.equals("DOWN"))
+		if(a.equals("DOWN") && ((pieceY+1<=15 && (pieceX==0 || pieceX==15)) || ((pieceY+1>=9 && pieceY+1<=15) && pieceX==13) || ((pieceY+1<=6 && pieceY+1>=0) && pieceX==2) || (pieceY+1==15 && pieceX==11)) )
 			pieceY = pieceY+1;
-		if(a.equals("RIGHT"))
+		if(a.equals("RIGHT") && ((pieceX+1<=15 && (pieceY==0 || pieceY==15)) || ((pieceX+1>=9 && pieceX+1<=15) && pieceY==2) || ((pieceX+1<=6 && pieceX+1>=0) && pieceY==13) || (pieceX+1==15 && pieceY==4)) )
 			pieceX = pieceX+1;
-		if(a.equals("LEFT"))
+		if(a.equals("LEFT") && ((pieceX-1>=0 && (pieceY==0 || pieceY==15)) || ((pieceX-1>=9 && pieceX-1<=15) && pieceY==2) || ((pieceX-1<=6 && pieceX-1>=0) && pieceY==13) || (pieceX-1==0 && pieceY==11)) )
 			pieceX = pieceX-1;
-	}	
-	
-	
-	
+	}
+
 }
