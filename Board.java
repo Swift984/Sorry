@@ -1,6 +1,9 @@
 import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
+import java.awt.event.MouseMotionListener;
 
 import javax.sound.*;
 import javax.swing.*;
@@ -8,11 +11,12 @@ import java.util.*;
 import java.io.*;
 import javax.imageio.*;
 
-public class Board extends JPanel implements Runnable , KeyListener
+public class Board extends JPanel implements Runnable , KeyListener , MouseListener, MouseMotionListener
 {
 	public static int DEFAULT_X = 730;
 	public static int DEFAULT_Y = 640-(267/2);
 	
+	private File title;
 	private File BoardJPG;
 	private File CardJPG;
 	
@@ -23,6 +27,7 @@ public class Board extends JPanel implements Runnable , KeyListener
 	private File Yellow;
 	private File Green;
 	
+	private File Start;
 	private File back;
 	
 	private int MouseX;
@@ -50,6 +55,11 @@ public class Board extends JPanel implements Runnable , KeyListener
 	private Piece G2;
 	private Piece G3;
 	private Piece G4;
+	
+	private int Ox = 1280;
+	private int Oy = 1280;
+	private int Sx = 300;
+	private int Sy = 150;
 	
 	private int cardx = 1;
 	private int cardy = 1;
@@ -79,6 +89,8 @@ public class Board extends JPanel implements Runnable , KeyListener
 		Blue = new File("pawnBLUE.png");
 		Yellow = new File("pawnYELLOW.png");
 		Green = new File("pawnGREEN.png");
+		title = new File("title.png");
+		Start = new File("start.png");
 		
 		SELECT = 1;
 		TURN = 1;
@@ -157,13 +169,6 @@ public class Board extends JPanel implements Runnable , KeyListener
 		drawPiece(G2, window);
 		drawPiece(G1, window);
 		
-		try {
-			if(showInstructions)
-				window.drawImage(ImageIO.read(InstructionJPG), 0, 0, 1280, 1280, null);
-		} catch(IOException e) {
-			
-		}
-		
 		window.setColor(Color.BLACK);
 		MouseX = MouseInfo.getPointerInfo().getLocation().x-getLocationOnScreen().x;
 		MouseY = MouseInfo.getPointerInfo().getLocation().y-getLocationOnScreen().y;
@@ -181,6 +186,14 @@ public class Board extends JPanel implements Runnable , KeyListener
 			window.setColor(Color.GREEN);
 		window.drawString("Pawn " + SELECT + " is selected", 572, 25 );
 		
+		try {
+			window.drawImage(ImageIO.read(title), 0, 0, Ox, Oy, null);
+			window.drawImage(ImageIO.read(Start), 75, 980, Sx, Sy, null);
+			if(showInstructions)
+				window.drawImage(ImageIO.read(InstructionJPG), 0, 0, 1280, 1280, null);
+		} catch(IOException e) {
+			
+		}
 		
 	}
 	
@@ -480,6 +493,64 @@ public class Board extends JPanel implements Runnable , KeyListener
 
 	@Override
 	public void keyTyped(KeyEvent arg0) {
+		// TODO Auto-generated method stub
+		
+	}
+
+
+	@Override
+	public void mouseDragged(MouseEvent arg0) {
+		// TODO Auto-generated method stub
+		
+	}
+
+
+	@Override
+	public void mouseMoved(MouseEvent arg0) {
+		// TODO Auto-generated method stub
+		
+	}
+
+
+	@Override
+	public void mouseClicked(MouseEvent e) {
+		if(MouseX > 123 && MouseX < 323  && MouseY > 1020 && MouseY < 1060 )
+		{
+			if(e.getButton() == MouseEvent.BUTTON1)
+				System.out.println("left click");
+				title = new File("trans.png");
+				Start = new File("trans.png");
+				Ox = 0;
+				Oy = 0;
+				Sx = 0;
+				Sy = 0;
+		}
+	}
+
+
+	@Override
+	public void mouseEntered(MouseEvent arg0) {
+		// TODO Auto-generated method stub
+		
+	}
+
+
+	@Override
+	public void mouseExited(MouseEvent arg0) {
+		// TODO Auto-generated method stub
+		
+	}
+
+
+	@Override
+	public void mousePressed(MouseEvent arg0) {
+		// TODO Auto-generated method stub
+		
+	}
+
+
+	@Override
+	public void mouseReleased(MouseEvent arg0) {
 		// TODO Auto-generated method stub
 		
 	}
