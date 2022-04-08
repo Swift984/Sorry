@@ -18,9 +18,9 @@ public class Board extends JPanel implements Runnable , KeyListener , MouseListe
 	public static int DEFAULT_Y = 640-(267/2);
 
 	private File title;
-	
 	private File titleBorder;
 	private File titleLogo;
+
 	
 	private File BoardJPG;
 	private File CardJPG;
@@ -31,8 +31,10 @@ public class Board extends JPanel implements Runnable , KeyListener , MouseListe
 	private File Blue;
 	private File Yellow;
 	private File Green;
+	
 
-	private File Start;
+
+  private File Start;
 
 	private File back;
 	
@@ -40,9 +42,7 @@ public class Board extends JPanel implements Runnable , KeyListener , MouseListe
 	private int MouseY;
 	
 	private int SELECT;
-	private int Nuts;
-	
-	private int players = 4;
+	private int TURN;
 	
 	private Piece R1;
 	private Piece R2;
@@ -64,10 +64,10 @@ public class Board extends JPanel implements Runnable , KeyListener , MouseListe
 	private Piece G3;
 	private Piece G4;
   
-	private int Ox = 1280;
-	private int Oy = 1280;
-	private int Sx = 300;
-	private int Sy = 150;
+  private int Ox = 1280;
+  private int Oy = 1280;
+  private int Sx = 300;
+  private int Sy = 150;
 	
 	private int cardx = 1;
 	private int cardy = 1;
@@ -83,7 +83,7 @@ public class Board extends JPanel implements Runnable , KeyListener , MouseListe
 	
 	private ArrayList<Card> usedCards;
 	
-	private Boolean showInstructions = true;
+	private Boolean showInstructions = false;
 	
 	public Board()
 	{
@@ -93,7 +93,7 @@ public class Board extends JPanel implements Runnable , KeyListener , MouseListe
 		CardJPG = new File("trans.png");
 
 		InstructionJPG = new File("Instructions.png");
-		
+
 		back = new File("Back-Card.png");
 		Red = new File("pawnRED.png");
 		Blue = new File("pawnBLUE.png");
@@ -105,44 +105,36 @@ public class Board extends JPanel implements Runnable , KeyListener , MouseListe
 		Start = new File("start.png");
 		
 		SELECT = 1;
-		Nuts = 1;
+		TURN = 1;
 
 		usedCards = new ArrayList<Card>();
 		
 
 		SELECT = 1;
-		Nuts = 1;
+		TURN = 1;
 		
 		usedCards = new ArrayList<Card>();
 		
-		if(players >= 2)
-		{
-			R1 = new Piece(Red, 11, 14, 1);
-			R2 = new Piece(Red, 11, 14, 2);
-			R3 = new Piece(Red, 11, 14, 3);
-			R4 = new Piece(Red, 11, 14, 4);
+		R1 = new Piece(Red, 11, 14, 1);
+		R2 = new Piece(Red, 11, 14, 2);
+		R3 = new Piece(Red, 11, 14, 3);
+		R4 = new Piece(Red, 11, 14, 4);
 		
-			B1 = new Piece(Blue, 1, 11, 1);
-			B2 = new Piece(Blue, 1, 11, 2);
-			B3 = new Piece(Blue, 1, 11, 3);
-			B4 = new Piece(Blue, 1, 11, 4);
-			
-			if(players >= 3)
-			{
-				Y1 = new Piece(Yellow, 4, 1, 1);
-				Y2 = new Piece(Yellow, 4, 1, 2);
-				Y3 = new Piece(Yellow, 4, 1, 3);
-				Y4 = new Piece(Yellow, 4, 1, 4);
-				
-				if(players ==4)
-				{
-					G1 = new Piece(Green, 14, 4, 1);
-					G2 = new Piece(Green, 14, 4, 2);
-					G3 = new Piece(Green, 14, 4, 3);
-					G4 = new Piece(Green, 14, 4, 4);
-				}
-			}
-		}
+		B1 = new Piece(Blue, 1, 11, 1);
+		B2 = new Piece(Blue, 1, 11, 2);
+		B3 = new Piece(Blue, 1, 11, 3);
+		B4 = new Piece(Blue, 1, 11, 4);
+
+		Y1 = new Piece(Yellow, 4, 1, 1);
+		Y2 = new Piece(Yellow, 4, 1, 2);
+		Y3 = new Piece(Yellow, 4, 1, 3);
+		Y4 = new Piece(Yellow, 4, 1, 4);
+
+		G1 = new Piece(Green, 14, 4, 1);
+		G2 = new Piece(Green, 14, 4, 2);
+		G3 = new Piece(Green, 14, 4, 3);
+		G4 = new Piece(Green, 14, 4, 4);
+
 		
 		Deck = new Deck();
 		
@@ -201,25 +193,32 @@ public class Board extends JPanel implements Runnable , KeyListener , MouseListe
 		drawPiece(G2, window);
 		drawPiece(G1, window);
 		
+		try {
+			if(showInstructions)
+				window.drawImage(ImageIO.read(InstructionJPG), 0, 0, 1280, 1280, null);
+		} catch(IOException e) {
+			
+		}
 		
 		window.setColor(Color.BLACK);
 		MouseX = MouseInfo.getPointerInfo().getLocation().x-getLocationOnScreen().x;
 		MouseY = MouseInfo.getPointerInfo().getLocation().y-getLocationOnScreen().y;
 		window.setFont( new Font("Arial", 0, 12) );
-		window.drawString("F1 if you need help", 20, 30 );
+		window.drawString("Mouse  coordinates " + "(" + MouseX + "   " + MouseY + ")", 20, 30 );
 		window.fillRect( 565, 7, 150, 25);
 		window.setFont( new Font("Calibri", 1, 18) );
-		if(Nuts == 1)
+		if(TURN == 1)
 			window.setColor(Color.RED);
-		if(Nuts == 2)
+		if(TURN == 2)
 			window.setColor(Color.BLUE);
-		if(Nuts == 3)
+		if(TURN == 3)
 			window.setColor(Color.YELLOW);
-		if(Nuts == 4)
+		if(TURN == 4)
 			window.setColor(Color.GREEN);
 
 		window.drawString("Pawn " + SELECT + " is selected", 572, 25 );
-		
+
+
 		
 		try {
 			window.drawImage(ImageIO.read(title), 0, 0, Ox, Oy, null);
@@ -227,17 +226,6 @@ public class Board extends JPanel implements Runnable , KeyListener , MouseListe
 			window.drawImage(ImageIO.read(titleLogo), 0, 0, Ox, Oy, null);
 			window.drawImage(ImageIO.read(Start), 75, 980, Sx, Sy, null);
 		} catch (IOException e) {
-		
-			try {
-				if(showInstructions)
-					window.drawImage(ImageIO.read(InstructionJPG), 0, 0, 1280, 1280, null);
-			} catch (IOException e1) {
-				// TODO Auto-generated catch block
-				e1.printStackTrace();
-			}
-
-		
-	
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
@@ -274,7 +262,6 @@ public class Board extends JPanel implements Runnable , KeyListener , MouseListe
 		}
 	}
 	
-	
 
 	public void shuffle()
 	{
@@ -305,7 +292,10 @@ public class Board extends JPanel implements Runnable , KeyListener , MouseListe
 		if(MouseX > 123 && MouseX < 323  && MouseY > 1020 && MouseY < 1060 )
 		{
 			if(e.getButton() == MouseEvent.BUTTON1)
+				System.out.println("left click");
 				title = new File("trans.png");
+				titleBorder = new File("trans.png");
+				titleLogo = new File("trans.png");
 				Start = new File("trans.png");
 				Ox = 0;
 				Oy = 0;
@@ -319,6 +309,8 @@ public class Board extends JPanel implements Runnable , KeyListener , MouseListe
 	}
 	
 	public void mouseMoved(MouseEvent e){  		
+		MouseX = e.getX(); 
+    	MouseY = e.getY(); 
     }
 
 
@@ -338,7 +330,7 @@ public class Board extends JPanel implements Runnable , KeyListener , MouseListe
 			showInstructions = !showInstructions;
 		
 		//Red
-		if(Nuts == 1)
+		if(TURN == 1)
 		{
 			if(SELECT == 1)
 			{
@@ -390,7 +382,7 @@ public class Board extends JPanel implements Runnable , KeyListener , MouseListe
 		}
 		
 		//Blue
-		if(Nuts == 2)
+		if(TURN == 2)
 		{
 			if(SELECT == 1)
 			{
@@ -442,7 +434,7 @@ public class Board extends JPanel implements Runnable , KeyListener , MouseListe
 		}
 		
 		//Yellow
-		if(Nuts == 3)
+		if(TURN == 3)
 		{
 			if(SELECT == 1)
 			{
@@ -494,7 +486,7 @@ public class Board extends JPanel implements Runnable , KeyListener , MouseListe
 		}
 		
 		//Green
-		if(Nuts == 4)
+		if(TURN == 4)
 		{
 			if(SELECT == 1)
 			{
@@ -562,9 +554,35 @@ public class Board extends JPanel implements Runnable , KeyListener , MouseListe
 		
 		if(e.getKeyCode() == KeyEvent.VK_ENTER )
 		{
-			Nuts = Nuts + 1;
-			if(Nuts > 4)
-				Nuts = 1;
+			TURN = TURN + 1;
+			if(TURN > 4)
+				TURN = 1;
+		}
+		
+		if(e.getKeyCode() == KeyEvent.VK_SPACE && Deck.size() != 0 )
+		{
+			cardx = 166;
+			cardy = 267;
+			
+			Card c = Deck.poll();
+			c.isAnim = true;
+			usedCards.add(c);
+		}
+		
+
+		if(e.getKeyCode() == KeyEvent.VK_S )
+		{
+			Deck.Reset();
+		}
+		
+		
+		
+
+		if(e.getKeyCode() == KeyEvent.VK_ENTER )
+		{
+			TURN = TURN + 1;
+			if(TURN > 4)
+				TURN = 1;
 		}
 		
 
