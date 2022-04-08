@@ -83,7 +83,7 @@ public class Board extends JPanel implements Runnable , KeyListener , MouseListe
 	
 	private ArrayList<Card> usedCards;
 	
-	private Boolean showInstructions = false;
+	private Boolean showInstructions = true;
 	
 	public Board()
 	{
@@ -91,9 +91,7 @@ public class Board extends JPanel implements Runnable , KeyListener , MouseListe
 		
 		BoardJPG = new File("gameboard.jpg");
 		CardJPG = new File("trans.png");
-
 		InstructionJPG = new File("Instructions.png");
-
 		back = new File("Back-Card.png");
 		Red = new File("pawnRED.png");
 		Blue = new File("pawnBLUE.png");
@@ -193,12 +191,7 @@ public class Board extends JPanel implements Runnable , KeyListener , MouseListe
 		drawPiece(G2, window);
 		drawPiece(G1, window);
 		
-		try {
-			if(showInstructions)
-				window.drawImage(ImageIO.read(InstructionJPG), 0, 0, 1280, 1280, null);
-		} catch(IOException e) {
-			
-		}
+		
 		
 		window.setColor(Color.BLACK);
 		MouseX = MouseInfo.getPointerInfo().getLocation().x-getLocationOnScreen().x;
@@ -218,7 +211,12 @@ public class Board extends JPanel implements Runnable , KeyListener , MouseListe
 
 		window.drawString("Pawn " + SELECT + " is selected", 572, 25 );
 
-
+		try {
+			if(showInstructions)
+				window.drawImage(ImageIO.read(InstructionJPG), 0, 0, 1280, 1280, null);
+		} catch(IOException e) {
+			
+		}
 		
 		try {
 			window.drawImage(ImageIO.read(title), 0, 0, Ox, Oy, null);
