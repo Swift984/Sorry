@@ -1,4 +1,5 @@
 import java.awt.*;
+import java.awt.event.InputEvent;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.event.MouseEvent;
@@ -15,8 +16,12 @@ public class Board extends JPanel implements Runnable , KeyListener , MouseListe
 {
 	public static int DEFAULT_X = 730;
 	public static int DEFAULT_Y = 640-(267/2);
-	
+
 	private File title;
+	private File titleBorder;
+	private File titleLogo;
+
+	
 	private File BoardJPG;
 	private File CardJPG;
 	
@@ -27,7 +32,10 @@ public class Board extends JPanel implements Runnable , KeyListener , MouseListe
 	private File Yellow;
 	private File Green;
 	
-	private File Start;
+
+
+  private File Start;
+
 	private File back;
 	
 	private int MouseX;
@@ -55,11 +63,11 @@ public class Board extends JPanel implements Runnable , KeyListener , MouseListe
 	private Piece G2;
 	private Piece G3;
 	private Piece G4;
-	
-	private int Ox = 1280;
-	private int Oy = 1280;
-	private int Sx = 300;
-	private int Sy = 150;
+  
+  private int Ox = 1280;
+  private int Oy = 1280;
+  private int Sx = 300;
+  private int Sy = 150;
 	
 	private int cardx = 1;
 	private int cardy = 1;
@@ -83,15 +91,25 @@ public class Board extends JPanel implements Runnable , KeyListener , MouseListe
 		
 		BoardJPG = new File("gameboard.jpg");
 		CardJPG = new File("trans.png");
+
 		InstructionJPG = new File("Instructions.png");
+
 		back = new File("Back-Card.png");
 		Red = new File("pawnRED.png");
 		Blue = new File("pawnBLUE.png");
 		Yellow = new File("pawnYELLOW.png");
 		Green = new File("pawnGREEN.png");
-		title = new File("title.png");
+		title = new File("Menu.png");
+		titleBorder = new File("MenuBorder.png");
+		titleLogo = new File("MenuSorry.png");
 		Start = new File("start.png");
 		
+		SELECT = 1;
+		TURN = 1;
+
+		usedCards = new ArrayList<Card>();
+		
+
 		SELECT = 1;
 		TURN = 1;
 		
@@ -116,10 +134,12 @@ public class Board extends JPanel implements Runnable , KeyListener , MouseListe
 		G2 = new Piece(Green, 14, 4, 2);
 		G3 = new Piece(Green, 14, 4, 3);
 		G4 = new Piece(Green, 14, 4, 4);
+
 		
 		Deck = new Deck();
 		
 		addKeyListener( this );
+		addMouseListener( this );
 		setFocusable( true );
 		
 		new Thread(this).start();
@@ -131,8 +151,9 @@ public class Board extends JPanel implements Runnable , KeyListener , MouseListe
 		window.clearRect( 0,0, 1280, 1280);
 		
 		try {
-			window.drawImage(ImageIO.read(BoardJPG), 0, 0, 1280, 1280, null);
 			
+			window.drawImage(ImageIO.read(BoardJPG), 0, 0, 1280, 1280, null);
+
 			if(!Deck.isEmpty())
 				window.drawImage(ImageIO.read(back), 730, 640-(267/2), Cx, Cy, null);
 
@@ -143,13 +164,16 @@ public class Board extends JPanel implements Runnable , KeyListener , MouseListe
 					c.x -= 50;
           
 				if(Deck.size() != 45)
+
 					window.drawImage(ImageIO.read(CardJPG), c.x, c.y, cardx, cardy, null);
 			}
+
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
 		
 		drawPiece(R4, window);
+
 		drawPiece(R3, window);
 		drawPiece(R2, window);
 		drawPiece(R1, window);
@@ -169,6 +193,13 @@ public class Board extends JPanel implements Runnable , KeyListener , MouseListe
 		drawPiece(G2, window);
 		drawPiece(G1, window);
 		
+		try {
+			if(showInstructions)
+				window.drawImage(ImageIO.read(InstructionJPG), 0, 0, 1280, 1280, null);
+		} catch(IOException e) {
+			
+		}
+		
 		window.setColor(Color.BLACK);
 		MouseX = MouseInfo.getPointerInfo().getLocation().x-getLocationOnScreen().x;
 		MouseY = MouseInfo.getPointerInfo().getLocation().y-getLocationOnScreen().y;
@@ -184,17 +215,20 @@ public class Board extends JPanel implements Runnable , KeyListener , MouseListe
 			window.setColor(Color.YELLOW);
 		if(TURN == 4)
 			window.setColor(Color.GREEN);
+
 		window.drawString("Pawn " + SELECT + " is selected", 572, 25 );
+
+
 		
 		try {
 			window.drawImage(ImageIO.read(title), 0, 0, Ox, Oy, null);
+			window.drawImage(ImageIO.read(titleBorder), 0, 0, Ox, Oy, null);
+			window.drawImage(ImageIO.read(titleLogo), 0, 0, Ox, Oy, null);
 			window.drawImage(ImageIO.read(Start), 75, 980, Sx, Sy, null);
-			if(showInstructions)
-				window.drawImage(ImageIO.read(InstructionJPG), 0, 0, 1280, 1280, null);
-		} catch(IOException e) {
-			
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
-		
 	}
 	
 	public void drawPiece(Piece p, Graphics g)
@@ -216,6 +250,7 @@ public class Board extends JPanel implements Runnable , KeyListener , MouseListe
 		try
 		{
 			while( true )
+
 			{
 			   Thread.sleep(100);
 			   repaint();
@@ -227,6 +262,7 @@ public class Board extends JPanel implements Runnable , KeyListener , MouseListe
 		}
 	}
 	
+
 	public void shuffle()
 	{
 		if(Deck.isEmpty())
@@ -235,6 +271,49 @@ public class Board extends JPanel implements Runnable , KeyListener , MouseListe
 		}
 		
 	}
+
+
+	public void mousePressed(MouseEvent e ) { 
+		
+	}
+	/*2 mouseReleased -- when mouse button is released*/
+	public void mouseReleased(MouseEvent e) { 
+		
+	}
+	/*3 mouseEntered -- when the mouse enters the window */
+	public void mouseEntered(MouseEvent e) {
+		
+	}
+	
+	public void mouseExited(MouseEvent e) { 
+		
+	}
+	public void mouseClicked(MouseEvent e) { 	
+		if(MouseX > 123 && MouseX < 323  && MouseY > 1020 && MouseY < 1060 )
+		{
+			if(e.getButton() == MouseEvent.BUTTON1)
+				System.out.println("left click");
+				title = new File("trans.png");
+				titleBorder = new File("trans.png");
+				titleLogo = new File("trans.png");
+				Start = new File("trans.png");
+				Ox = 0;
+				Oy = 0;
+				Sx = 0;
+				Sy = 0;
+		}
+			
+	}
+	public void mouseDragged(MouseEvent e){  
+		
+	}
+	
+	public void mouseMoved(MouseEvent e){  		
+		MouseX = e.getX(); 
+    	MouseY = e.getY(); 
+    }
+
+
 	
 	@Override
 	public void keyPressed(KeyEvent arg0) {
@@ -245,6 +324,7 @@ public class Board extends JPanel implements Runnable , KeyListener , MouseListe
 	@Override
 	public void keyReleased(KeyEvent e)
 	{
+
 		
 		if(e.getKeyCode() == KeyEvent.VK_F1)
 			showInstructions = !showInstructions;
@@ -489,68 +569,36 @@ public class Board extends JPanel implements Runnable , KeyListener , MouseListe
 			usedCards.add(c);
 		}
 		
+
+		if(e.getKeyCode() == KeyEvent.VK_S )
+		{
+			Deck.Reset();
+		}
+		
+		
+		
+
+		if(e.getKeyCode() == KeyEvent.VK_ENTER )
+		{
+			TURN = TURN + 1;
+			if(TURN > 4)
+				TURN = 1;
+		}
+		
+
+		if(e.getKeyCode() == KeyEvent.VK_SPACE )
+		{
+			cardx = 166;
+			cardy = 267;
+			
+			Card c = Deck.poll();
+			c.isAnim = true;
+			usedCards.add(c);
+		}
 	}
 
 	@Override
 	public void keyTyped(KeyEvent arg0) {
-		// TODO Auto-generated method stub
-		
-	}
-
-
-	@Override
-	public void mouseDragged(MouseEvent arg0) {
-		// TODO Auto-generated method stub
-		
-	}
-
-
-	@Override
-	public void mouseMoved(MouseEvent arg0) {
-		// TODO Auto-generated method stub
-		
-	}
-
-
-	@Override
-	public void mouseClicked(MouseEvent e) {
-		if(MouseX > 123 && MouseX < 323  && MouseY > 1020 && MouseY < 1060 )
-		{
-			if(e.getButton() == MouseEvent.BUTTON1)
-				System.out.println("left click");
-				title = new File("trans.png");
-				Start = new File("trans.png");
-				Ox = 0;
-				Oy = 0;
-				Sx = 0;
-				Sy = 0;
-		}
-	}
-
-
-	@Override
-	public void mouseEntered(MouseEvent arg0) {
-		// TODO Auto-generated method stub
-		
-	}
-
-
-	@Override
-	public void mouseExited(MouseEvent arg0) {
-		// TODO Auto-generated method stub
-		
-	}
-
-
-	@Override
-	public void mousePressed(MouseEvent arg0) {
-		// TODO Auto-generated method stub
-		
-	}
-
-
-	@Override
-	public void mouseReleased(MouseEvent arg0) {
 		// TODO Auto-generated method stub
 		
 	}
