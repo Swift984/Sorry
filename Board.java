@@ -78,6 +78,7 @@ public class Board extends JPanel implements Runnable , KeyListener , MouseListe
 	private int Cy = 267;
 	
 	private Boolean anim = false;
+	private Boolean drawnCard = false;
 	
 	private Deck Deck;
 	
@@ -555,9 +556,11 @@ public class Board extends JPanel implements Runnable , KeyListener , MouseListe
 			TURN = TURN + 1;
 			if(TURN > 4)
 				TURN = 1;
+			
+			drawnCard = false;
 		}
 		
-		if(e.getKeyCode() == KeyEvent.VK_SPACE && Deck.size() != 0 )
+		if(e.getKeyCode() == KeyEvent.VK_SPACE && Deck.size() != 0 && drawnCard==false )
 		{
 			cardx = 166;
 			cardy = 267;
@@ -565,6 +568,8 @@ public class Board extends JPanel implements Runnable , KeyListener , MouseListe
 			Card c = Deck.poll();
 			c.isAnim = true;
 			usedCards.add(c);
+			
+			drawnCard = true;
 		}
 		
 
