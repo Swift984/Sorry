@@ -1,3 +1,4 @@
+
 import java.awt.*;
 import javax.sound.*;
 import javax.swing.*;
@@ -13,11 +14,14 @@ public class Piece {
 	private int number;
 	
 	public Piece(File c, int x, int y, int n)
+
 	{
 		color = c;
 		pieceX = x;
 		pieceY = y;
+
 		number = n;
+
 	}
 	
 	public int getX()
@@ -34,11 +38,12 @@ public class Piece {
 	{
 		return color;
 	}
-	
+
 	public int getNumber()
 	{
 		return number;
 	}
+
 	
 	public boolean sameColor(Piece t)
 	{
@@ -47,6 +52,7 @@ public class Piece {
 		return false;
 	}
 	
+
 	public void gotoStart()
 	{
 		if(this.color.equals(new File("pawnRED.png")))
@@ -82,4 +88,5 @@ public class Piece {
 		if(a.equals("LEFT") && ((pieceX-1>=0 && (pieceY==0 || pieceY==15)) || ((pieceX-1>=9 && pieceX-1<=15) && pieceY==2) || ((pieceX-1<=6 && pieceX-1>=0) && pieceY==13) || (pieceX-1==0 && pieceY==11)) )
 			pieceX = pieceX-1;
 	}
+
 }
