@@ -1,5 +1,7 @@
 import java.awt.*;
+
 import java.awt.List;
+
 import java.awt.event.InputEvent;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
@@ -33,11 +35,13 @@ public class Board extends JPanel implements Runnable , KeyListener , MouseListe
 	private File Yellow;
 	private File Green;
 	
+
 	private Piece swap1;
 	private Piece swap2;
 	
 	
 	private File Start;
+
 
 	private File back;
 	
@@ -46,12 +50,12 @@ public class Board extends JPanel implements Runnable , KeyListener , MouseListe
 	
 	private int SELECT;
 	private int TURN;
-	
+
 	private int Player = 1;
 	private int PAWN = 1;
 	
 	int cnt = 0;
-	
+  
 	private Piece R1;
 	private Piece R2;
 	private Piece R3;
@@ -72,11 +76,12 @@ public class Board extends JPanel implements Runnable , KeyListener , MouseListe
 	private Piece G3;
 	private Piece G4;
   
+
 	private int Ox = 1280;
 	private int Oy = 1280;
 	private int Sx = 300;
 	private int Sy = 150;
-		
+
 	private int cardx = 1;
 	private int cardy = 1;
 	
@@ -86,6 +91,9 @@ public class Board extends JPanel implements Runnable , KeyListener , MouseListe
 	private int Cy = 267;
 	
 	private Boolean anim = false;
+
+	private Boolean drawnCard = false;
+
 	
 	private Deck Deck;
 	
@@ -117,7 +125,8 @@ public class Board extends JPanel implements Runnable , KeyListener , MouseListe
 		
 
 		SELECT = 1;
-	
+
+		TURN = 1;
 		
 		usedCards = new ArrayList<Card>();
 		
@@ -188,7 +197,7 @@ public class Board extends JPanel implements Runnable , KeyListener , MouseListe
 		drawPiece(B3, window);
 		drawPiece(B2, window);
 		drawPiece(B1, window);
-		
+
 		drawPiece(Y4, window);
 		drawPiece(Y3, window);
 		drawPiece(Y2, window);
@@ -200,13 +209,15 @@ public class Board extends JPanel implements Runnable , KeyListener , MouseListe
 		drawPiece(G1, window);
 		
 		
-		
+
 		window.setColor(Color.BLACK);
 		MouseX = MouseInfo.getPointerInfo().getLocation().x-getLocationOnScreen().x;
 		MouseY = MouseInfo.getPointerInfo().getLocation().y-getLocationOnScreen().y;
 		window.setFont( new Font("Arial", 0, 12) );
+
 		window.drawString( "Team " + Player + " is selected", 20, 30 );
 		window.drawString( "Pawn " + PAWN + " is selected", 150, 30 );
+
 		window.fillRect( 565, 7, 150, 25);
 		window.setFont( new Font("Calibri", 1, 18) );
 		if(TURN == 1)
@@ -269,6 +280,7 @@ public class Board extends JPanel implements Runnable , KeyListener , MouseListe
 		}
 	}
 	
+
 	public void shuffle()
 	{
 		if(Deck.isEmpty())
@@ -438,6 +450,7 @@ public class Board extends JPanel implements Runnable , KeyListener , MouseListe
 						B4.move("UP");
 			}
 		}
+
 		
 		//Yellow
 		if(TURN == 3)
@@ -810,8 +823,174 @@ public class Board extends JPanel implements Runnable , KeyListener , MouseListe
 				swap2.changeX(x);
 				swap2.changeY(y);
 			}
+
+		
+		//Yellow
+		if(TURN == 3)
+		{
+			if(SELECT == 1)
+			{
+				if(e.getKeyCode() == KeyEvent.VK_RIGHT )
+						Y1.move("RIGHT");
+				if(e.getKeyCode() == KeyEvent.VK_LEFT )
+						Y1.move("LEFT");
+				if(e.getKeyCode() == KeyEvent.VK_DOWN )
+						Y1.move("DOWN");
+				if(e.getKeyCode() == KeyEvent.VK_UP )
+						Y1.move("UP");
+			}
+
+			if(SELECT == 2)
+			{
+				if(e.getKeyCode() == KeyEvent.VK_RIGHT )
+						Y2.move("RIGHT");
+				if(e.getKeyCode() == KeyEvent.VK_LEFT )
+						Y2.move("LEFT");
+				if(e.getKeyCode() == KeyEvent.VK_DOWN )
+						Y2.move("DOWN");
+				if(e.getKeyCode() == KeyEvent.VK_UP )
+						Y2.move("UP");
+			}
+
+			if(SELECT == 3)
+			{
+				if(e.getKeyCode() == KeyEvent.VK_RIGHT )
+						Y3.move("RIGHT");
+				if(e.getKeyCode() == KeyEvent.VK_LEFT )
+						Y3.move("LEFT");
+				if(e.getKeyCode() == KeyEvent.VK_DOWN )
+						Y3.move("DOWN");
+				if(e.getKeyCode() == KeyEvent.VK_UP )
+						Y3.move("UP");
+			}
+
+			if(SELECT == 4)
+			{
+				if(e.getKeyCode() == KeyEvent.VK_RIGHT )
+						Y4.move("RIGHT");
+				if(e.getKeyCode() == KeyEvent.VK_LEFT )
+						Y4.move("LEFT");
+				if(e.getKeyCode() == KeyEvent.VK_DOWN )
+						Y4.move("DOWN");
+				if(e.getKeyCode() == KeyEvent.VK_UP )
+						Y4.move("UP");
+			}
+		}
+		
+		//Green
+		if(TURN == 4)
+		{
+			if(SELECT == 1)
+			{
+				if(e.getKeyCode() == KeyEvent.VK_RIGHT )
+						G1.move("RIGHT");
+				if(e.getKeyCode() == KeyEvent.VK_LEFT )
+						G1.move("LEFT");
+				if(e.getKeyCode() == KeyEvent.VK_DOWN )
+						G1.move("DOWN");
+				if(e.getKeyCode() == KeyEvent.VK_UP )
+						G1.move("UP");
+			}
+
+			if(SELECT == 2)
+			{
+				if(e.getKeyCode() == KeyEvent.VK_RIGHT )
+						G2.move("RIGHT");
+				if(e.getKeyCode() == KeyEvent.VK_LEFT )
+						G2.move("LEFT");
+				if(e.getKeyCode() == KeyEvent.VK_DOWN )
+						G2.move("DOWN");
+				if(e.getKeyCode() == KeyEvent.VK_UP )
+						G2.move("UP");
+			}
+
+			if(SELECT == 3)
+			{
+				if(e.getKeyCode() == KeyEvent.VK_RIGHT )
+						G3.move("RIGHT");
+				if(e.getKeyCode() == KeyEvent.VK_LEFT )
+						G3.move("LEFT");
+				if(e.getKeyCode() == KeyEvent.VK_DOWN )
+						G3.move("DOWN");
+				if(e.getKeyCode() == KeyEvent.VK_UP )
+						G3.move("UP");
+			}
+
+			if(SELECT == 4)
+			{
+				if(e.getKeyCode() == KeyEvent.VK_RIGHT )
+						G4.move("RIGHT");
+				if(e.getKeyCode() == KeyEvent.VK_LEFT )
+						G4.move("LEFT");
+				if(e.getKeyCode() == KeyEvent.VK_DOWN )
+						G4.move("DOWN");
+				if(e.getKeyCode() == KeyEvent.VK_UP )
+						G4.move("UP");
+			}
+		}
+		
+		if(e.getKeyCode() == KeyEvent.VK_1 )
+			SELECT = 1;
+		if(e.getKeyCode() == KeyEvent.VK_2 )
+			SELECT = 2;
+		if(e.getKeyCode() == KeyEvent.VK_3 )
+			SELECT = 3;
+		if(e.getKeyCode() == KeyEvent.VK_4 )
+			SELECT = 4;
+		
+		if(e.getKeyCode() == KeyEvent.VK_S && Deck.size() == 0 )
+		{
+			usedCards.clear();
+			Deck.Reset();
+		}
+		
+		if(e.getKeyCode() == KeyEvent.VK_ENTER )
+		{
+			TURN = TURN + 1;
+			if(TURN > 4)
+				TURN = 1;
+			
+			drawnCard = false;
+		}
+		
+		if(e.getKeyCode() == KeyEvent.VK_SPACE && Deck.size() != 0 && drawnCard==false )
+		{
+			cardx = 166;
+			cardy = 267;
+			
+			Card c = Deck.poll();
+			c.isAnim = true;
+			usedCards.add(c);
+			
+			drawnCard = true;
+		}
+		
+
+		if(e.getKeyCode() == KeyEvent.VK_S )
+		{
+			Deck.Reset();
+		}
 		
 		
+		
+
+		if(e.getKeyCode() == KeyEvent.VK_ENTER )
+		{
+			TURN = TURN + 1;
+			if(TURN > 4)
+				TURN = 1;
+		}
+		
+
+		if(e.getKeyCode() == KeyEvent.VK_SPACE )
+		{
+			cardx = 166;
+			cardy = 267;
+			
+			Card c = Deck.poll();
+			c.isAnim = true;
+			usedCards.add(c);
+		}
 	}
 		
 	
