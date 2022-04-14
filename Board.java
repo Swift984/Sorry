@@ -1,4 +1,5 @@
 import java.awt.*;
+import java.awt.List;
 import java.awt.event.InputEvent;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
@@ -18,7 +19,8 @@ public class Board extends JPanel implements Runnable , KeyListener , MouseListe
 	public static int DEFAULT_Y = 640-(267/2);
 
 	private File title;
-	
+	private File titleBorder;
+	private File titleLogo;
 
 	
 	private File BoardJPG;
@@ -31,9 +33,11 @@ public class Board extends JPanel implements Runnable , KeyListener , MouseListe
 	private File Yellow;
 	private File Green;
 	
-
-
-  private File Start;
+	private Piece swap1;
+	private Piece swap2;
+	
+	
+	private File Start;
 
 	private File back;
 	
@@ -42,6 +46,11 @@ public class Board extends JPanel implements Runnable , KeyListener , MouseListe
 	
 	private int SELECT;
 	private int TURN;
+	
+	private int Player = 1;
+	private int PAWN = 1;
+	
+	int cnt = 0;
 	
 	private Piece R1;
 	private Piece R2;
@@ -63,11 +72,11 @@ public class Board extends JPanel implements Runnable , KeyListener , MouseListe
 	private Piece G3;
 	private Piece G4;
   
-  private int Ox = 1280;
-  private int Oy = 1280;
-  private int Sx = 300;
-  private int Sy = 150;
-	
+	private int Ox = 1280;
+	private int Oy = 1280;
+	private int Sx = 300;
+	private int Sy = 150;
+		
 	private int cardx = 1;
 	private int cardy = 1;
 	
@@ -82,7 +91,7 @@ public class Board extends JPanel implements Runnable , KeyListener , MouseListe
 	
 	private ArrayList<Card> usedCards;
 	
-	private Boolean showInstructions = false;
+	private Boolean showInstructions = true;
 	
 	public Board()
 	{
@@ -90,15 +99,15 @@ public class Board extends JPanel implements Runnable , KeyListener , MouseListe
 		
 		BoardJPG = new File("gameboard.jpg");
 		CardJPG = new File("trans.png");
-
 		InstructionJPG = new File("Instructions.png");
-
 		back = new File("Back-Card.png");
 		Red = new File("pawnRED.png");
 		Blue = new File("pawnBLUE.png");
 		Yellow = new File("pawnYELLOW.png");
 		Green = new File("pawnGREEN.png");
-		title = new File("title.png");
+		title = new File("Menu.png");
+		titleBorder = new File("MenuBorder.png");
+		titleLogo = new File("MenuSorry.png");
 		Start = new File("start.png");
 		
 		SELECT = 1;
@@ -108,7 +117,7 @@ public class Board extends JPanel implements Runnable , KeyListener , MouseListe
 		
 
 		SELECT = 1;
-		TURN = 1;
+	
 		
 		usedCards = new ArrayList<Card>();
 		
@@ -190,18 +199,14 @@ public class Board extends JPanel implements Runnable , KeyListener , MouseListe
 		drawPiece(G2, window);
 		drawPiece(G1, window);
 		
-		try {
-			if(showInstructions)
-				window.drawImage(ImageIO.read(InstructionJPG), 0, 0, 1280, 1280, null);
-		} catch(IOException e) {
-			
-		}
+		
 		
 		window.setColor(Color.BLACK);
 		MouseX = MouseInfo.getPointerInfo().getLocation().x-getLocationOnScreen().x;
 		MouseY = MouseInfo.getPointerInfo().getLocation().y-getLocationOnScreen().y;
 		window.setFont( new Font("Arial", 0, 12) );
-		window.drawString("Mouse  coordinates " + "(" + MouseX + "   " + MouseY + ")", 20, 30 );
+		window.drawString( "Team " + Player + " is selected", 20, 30 );
+		window.drawString( "Pawn " + PAWN + " is selected", 150, 30 );
 		window.fillRect( 565, 7, 150, 25);
 		window.setFont( new Font("Calibri", 1, 18) );
 		if(TURN == 1)
@@ -215,10 +220,17 @@ public class Board extends JPanel implements Runnable , KeyListener , MouseListe
 
 		window.drawString("Pawn " + SELECT + " is selected", 572, 25 );
 
-
+		try {
+			if(showInstructions)
+				window.drawImage(ImageIO.read(InstructionJPG), 0, 0, 1280, 1280, null);
+		} catch(IOException e) {
+			
+		}
 		
 		try {
 			window.drawImage(ImageIO.read(title), 0, 0, Ox, Oy, null);
+			window.drawImage(ImageIO.read(titleBorder), 0, 0, Ox, Oy, null);
+			window.drawImage(ImageIO.read(titleLogo), 0, 0, Ox, Oy, null);
 			window.drawImage(ImageIO.read(Start), 75, 980, Sx, Sy, null);
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
@@ -257,7 +269,6 @@ public class Board extends JPanel implements Runnable , KeyListener , MouseListe
 		}
 	}
 	
-
 	public void shuffle()
 	{
 		if(Deck.isEmpty())
@@ -289,6 +300,8 @@ public class Board extends JPanel implements Runnable , KeyListener , MouseListe
 			if(e.getButton() == MouseEvent.BUTTON1)
 				System.out.println("left click");
 				title = new File("trans.png");
+				titleBorder = new File("trans.png");
+				titleLogo = new File("trans.png");
 				Start = new File("trans.png");
 				Ox = 0;
 				Oy = 0;
@@ -560,6 +573,7 @@ public class Board extends JPanel implements Runnable , KeyListener , MouseListe
 			Card c = Deck.poll();
 			c.isAnim = true;
 			usedCards.add(c);
+			cnt--;
 		}
 		
 
@@ -568,17 +582,6 @@ public class Board extends JPanel implements Runnable , KeyListener , MouseListe
 			Deck.Reset();
 		}
 		
-		
-		
-
-		if(e.getKeyCode() == KeyEvent.VK_ENTER )
-		{
-			TURN = TURN + 1;
-			if(TURN > 4)
-				TURN = 1;
-		}
-		
-
 		if(e.getKeyCode() == KeyEvent.VK_SPACE )
 		{
 			cardx = 166;
@@ -588,7 +591,231 @@ public class Board extends JPanel implements Runnable , KeyListener , MouseListe
 			c.isAnim = true;
 			usedCards.add(c);
 		}
+		
+		if(e.getKeyCode() == KeyEvent.VK_5 )
+			PAWN = 1;
+		if(e.getKeyCode() == KeyEvent.VK_6 )
+			PAWN = 2;
+		if(e.getKeyCode() == KeyEvent.VK_7 )
+			PAWN = 3;
+		if(e.getKeyCode() == KeyEvent.VK_8 )
+			PAWN = 4;
+		
+		if(e.getKeyCode() == KeyEvent.VK_0 )
+		{
+			Player = Player + 1;
+			if(Player > 4)
+				Player = 1;
+		}
+		
+		
+			
+			if(e.getKeyCode() == KeyEvent.VK_L )
+			{
+				//Red
+				if(Player == 1)
+				{
+					if(PAWN == 1)
+					{
+						swap1 = R1;
+					}
+					if(PAWN == 2)
+					{
+						swap1 = R2;
+					}
+					if(PAWN == 3)
+					{
+						swap1 = R3;
+					}
+					if(PAWN == 4)
+					{
+						swap1 = R4;
+					}
+				}
+				
+				//Blue
+				if(Player == 2)
+				{
+					if(PAWN == 1)
+					{
+						swap1 = B1;
+					}
+					if(PAWN == 2)
+					{
+						swap1 = B2;
+					}
+					if(PAWN == 3)
+					{
+						swap1 = B3;
+					}
+					if(PAWN == 4)
+					{
+						swap1 = B4;
+					}	
+				}
+				
+				//Yellow
+				if(Player == 3)
+				{
+					if(PAWN == 1)
+					{
+						swap1 = Y1;
+					}
+					if(PAWN == 2)
+					{
+						swap1 = Y2;
+					}
+					if(PAWN == 3)
+					{
+						swap1 = Y3;
+					}
+					if(PAWN == 4)
+					{
+						swap1 = Y4;
+					}	
+				}
+				
+				//Green
+				if(Player == 4)
+				{
+					if(PAWN == 1)
+					{
+						swap1 = G1;
+					}
+					if(PAWN == 2)
+					{
+						
+						swap1 = G2;
+					}
+					if(PAWN == 3)
+					{
+						swap1 = G3;
+					}
+					if(PAWN == 4)
+					{
+						swap1 = G4;
+					}
+				}
+			}
+				
+				
+				
+				if(e.getKeyCode() == KeyEvent.VK_K )
+				{
+					//Red
+					if(Player == 1)
+					{
+						if(PAWN == 1)
+						{					
+							swap2 = R1;
+						}
+						if(PAWN == 2)
+						{
+							swap2 = R2;
+						}
+						if(PAWN == 3)
+						{
+							swap2 = R3;
+						}
+						if(PAWN == 4)
+						{
+							swap2 = R4;
+						}
+					}
+					
+					//Blue
+					if(Player == 2)
+					{
+						if(PAWN == 1)
+						{
+							swap2 = B1;
+						}
+						if(PAWN == 2)
+						{
+							swap2 = B2;
+						}
+						if(PAWN == 3)
+						{
+							swap2 = B3;
+						}
+						if(PAWN == 4)
+						{
+							swap2 = B4;
+						}	
+					}
+					
+					//Yellow
+					if(Player == 3)
+					{
+						if(PAWN == 1)
+						{
+							swap2 = Y1;
+						}
+						if(PAWN == 2)
+						{
+							swap2 = Y2;
+						}
+						if(PAWN == 3)
+						{
+							swap2 = Y3;
+						}
+						if(PAWN == 4)
+						{
+							swap2 = Y4;
+						}	
+					}
+					
+					//Green
+					if(Player == 4)
+					{
+						if(PAWN == 1)
+						{
+							swap2 = G1;
+						}
+						if(PAWN == 2)
+						{
+							swap2 = G2;
+						}
+						if(PAWN == 3)
+						{
+							swap2 = G3;
+						}
+						if(PAWN == 4)
+						{
+							swap2 = G4;
+						}
+					}
+				}		
+					
+				
+		if(Deck.peek().getMoves() == 11 || Deck.peek().getMoves() == 0)
+			cnt = 2;
+		
+		
+		
+			if(e.getKeyCode() == KeyEvent.VK_H)
+			{
+				swap1.changeX(swap2.getX());
+				swap1.changeY(swap2.getY());
+				swap2.gotoStart();
+				
+			}
+			
+			if(e.getKeyCode() == KeyEvent.VK_V )
+			{
+				int x = swap1.getX();
+				int y = swap1.getY();
+				swap1.changeX(swap2.getX());
+				swap1.changeY(swap2.getY());
+				swap2.changeX(x);
+				swap2.changeY(y);
+			}
+		
+		
 	}
+		
+	
+			
 
 	@Override
 	public void keyTyped(KeyEvent arg0) {
