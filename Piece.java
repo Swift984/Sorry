@@ -25,11 +25,23 @@ public class Piece {
 		return pieceX;
 	}
 	
+
+	public void changeX(int x)
+	{
+		pieceX = x;
+	}
+
 	public int getY()
 	{
 		return pieceY;
 	}
 	
+
+	public void changeY(int y)
+	{
+		pieceY = y;
+	}
+
 	public File getColor()
 	{
 		return color;
@@ -47,6 +59,19 @@ public class Piece {
 		return false;
 	}
 	
+
+	public void swap(Piece a, Piece b)
+	{
+		int x = a.getX();
+		int y = a.getY();
+		
+		a.pieceX = b.getX();
+		a.pieceY = b.getY();
+		b.pieceX = x;
+		b.pieceY = y;
+		
+	}
+
 	public void gotoStart()
 	{
 		if(this.color.equals(new File("pawnRED.png")))
