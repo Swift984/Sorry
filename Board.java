@@ -1,21 +1,23 @@
 import java.awt.*;
-
 import java.awt.List;
-
 import java.awt.event.InputEvent;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
+import java.awt.event.MouseWheelEvent;
+import java.awt.event.MouseWheelListener;
 
 import javax.sound.*;
+import javax.sound.sampled.LineUnavailableException;
+import javax.sound.sampled.UnsupportedAudioFileException;
 import javax.swing.*;
 import java.util.*;
 import java.io.*;
 import javax.imageio.*;
 
-public class Board extends JPanel implements Runnable , KeyListener , MouseListener, MouseMotionListener
+public class Board extends JPanel implements Runnable , KeyListener , MouseListener, MouseMotionListener, MouseWheelListener
 {
 	public static int DEFAULT_X = 730;
 	public static int DEFAULT_Y = 640-(267/2);
@@ -30,6 +32,8 @@ public class Board extends JPanel implements Runnable , KeyListener , MouseListe
 	
 	private File InstructionJPG;
 
+	private File SkeletonJPG;
+
 	private File Red;
 	private File Blue;
 	private File Yellow;
@@ -41,7 +45,6 @@ public class Board extends JPanel implements Runnable , KeyListener , MouseListe
 	
 	
 	private File Start;
-
 
 	private File back;
 	
@@ -76,12 +79,13 @@ public class Board extends JPanel implements Runnable , KeyListener , MouseListe
 	private Piece G3;
 	private Piece G4;
   
-
-	private int Ox = 1280;
-	private int Oy = 1280;
-	private int Sx = 300;
-	private int Sy = 150;
-
+  private int Ox = 1280;
+  private int Oy = 1280;
+  private int Sx = 300;
+  private int Sy = 150;
+  
+  private int SkeletonX = 1300;
+  
 	private int cardx = 1;
 	private int cardy = 1;
 	
@@ -92,21 +96,30 @@ public class Board extends JPanel implements Runnable , KeyListener , MouseListe
 	
 	private Boolean anim = false;
 
+
 	private Boolean drawnCard = false;
 
 	
 	private Deck Deck;
 	
 	private ArrayList<Card> usedCards;
+
 	
 	private Boolean showInstructions = true;
 	
-	public Board()
+	private Boolean showInstructions = true;
+	
+	private Playlist playlist;
+	
+	private Boolean SkeletonAnimation = false;
+	
+	public Board() throws UnsupportedAudioFileException, IOException
 	{
 		setBackground(Color.WHITE);
 		
 		BoardJPG = new File("gameboard.jpg");
 		CardJPG = new File("trans.png");
+
 		InstructionJPG = new File("Instructions.png");
 		back = new File("Back-Card.png");
 		Red = new File("pawnRED.png");
@@ -117,6 +130,8 @@ public class Board extends JPanel implements Runnable , KeyListener , MouseListe
 		titleBorder = new File("MenuBorder.png");
 		titleLogo = new File("MenuSorry.png");
 		Start = new File("start.png");
+
+		SkeletonJPG = new File("skeleton.png");
 		
 		SELECT = 1;
 		TURN = 1;
@@ -125,7 +140,6 @@ public class Board extends JPanel implements Runnable , KeyListener , MouseListe
 		
 
 		SELECT = 1;
-
 		TURN = 1;
 		
 		usedCards = new ArrayList<Card>();
@@ -140,11 +154,12 @@ public class Board extends JPanel implements Runnable , KeyListener , MouseListe
 		B3 = new Piece(Blue, 1, 11, 3);
 		B4 = new Piece(Blue, 1, 11, 4);
 
+
 		Y1 = new Piece(Yellow, 4, 1, 1);
 		Y2 = new Piece(Yellow, 4, 1, 2);
 		Y3 = new Piece(Yellow, 4, 1, 3);
 		Y4 = new Piece(Yellow, 4, 1, 4);
-
+    
 		G1 = new Piece(Green, 14, 4, 1);
 		G2 = new Piece(Green, 14, 4, 2);
 		G3 = new Piece(Green, 14, 4, 3);
@@ -153,8 +168,11 @@ public class Board extends JPanel implements Runnable , KeyListener , MouseListe
 		
 		Deck = new Deck();
 		
+		playlist = new Playlist(new File("songs\\").listFiles().length);
+		
 		addKeyListener( this );
 		addMouseListener( this );
+		addMouseWheelListener(this);
 		setFocusable( true );
 		
 		new Thread(this).start();
@@ -164,6 +182,13 @@ public class Board extends JPanel implements Runnable , KeyListener , MouseListe
 	public void paint( Graphics window )
 	{
 		window.clearRect( 0,0, 1280, 1280);
+		
+		try {
+			playlist.play();
+		} catch (LineUnavailableException | IOException | UnsupportedAudioFileException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
 		
 		try {
 			
@@ -182,7 +207,10 @@ public class Board extends JPanel implements Runnable , KeyListener , MouseListe
 
 					window.drawImage(ImageIO.read(CardJPG), c.x, c.y, cardx, cardy, null);
 			}
-
+			
+			if(SkeletonAnimation)
+				SkeletonX -= 100;
+        
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -197,7 +225,7 @@ public class Board extends JPanel implements Runnable , KeyListener , MouseListe
 		drawPiece(B3, window);
 		drawPiece(B2, window);
 		drawPiece(B1, window);
-
+    
 		drawPiece(Y4, window);
 		drawPiece(Y3, window);
 		drawPiece(Y2, window);
@@ -243,6 +271,11 @@ public class Board extends JPanel implements Runnable , KeyListener , MouseListe
 			window.drawImage(ImageIO.read(titleBorder), 0, 0, Ox, Oy, null);
 			window.drawImage(ImageIO.read(titleLogo), 0, 0, Ox, Oy, null);
 			window.drawImage(ImageIO.read(Start), 75, 980, Sx, Sy, null);
+			window.drawImage(ImageIO.read(SkeletonJPG), SkeletonX, 0, 100, 100, null);
+			
+			window.setFont( new Font("Arial", 0, 12) );
+			window.drawString("Song #: " + (playlist.getIndex() + 1) + "/" + playlist.getLength(), 1000, 20 );
+
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -322,6 +355,38 @@ public class Board extends JPanel implements Runnable , KeyListener , MouseListe
 		}
 			
 	}
+	
+	public void mouseWheelMoved (MouseWheelEvent e) {
+		
+		
+		if(e.getWheelRotation() < 0){
+			try {
+				playlist.next();
+				
+				if(playlist.getSong().toString().equals("songs\\4.wav")) {
+					if(new Random().nextInt(4) == 0) {
+						SkeletonX = 1300;
+						SkeletonAnimation = true;
+					}
+				}
+			} catch (LineUnavailableException | IOException | UnsupportedAudioFileException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+		} else
+			try {
+				playlist.prev();
+				if(playlist.getSong().toString().equals("songs\\4.wav")) {
+					SkeletonX = 1300;
+					SkeletonAnimation = true;
+				}
+			} catch (LineUnavailableException | IOException | UnsupportedAudioFileException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+		
+	}
+
 	public void mouseDragged(MouseEvent e){  
 		
 	}
@@ -564,7 +629,7 @@ public class Board extends JPanel implements Runnable , KeyListener , MouseListe
 			SELECT = 3;
 		if(e.getKeyCode() == KeyEvent.VK_4 )
 			SELECT = 4;
-		
+	
 		if(e.getKeyCode() == KeyEvent.VK_S && Deck.size() == 0 )
 		{
 			usedCards.clear();
@@ -937,7 +1002,7 @@ public class Board extends JPanel implements Runnable , KeyListener , MouseListe
 			SELECT = 3;
 		if(e.getKeyCode() == KeyEvent.VK_4 )
 			SELECT = 4;
-		
+
 		if(e.getKeyCode() == KeyEvent.VK_S && Deck.size() == 0 )
 		{
 			usedCards.clear();
@@ -949,6 +1014,7 @@ public class Board extends JPanel implements Runnable , KeyListener , MouseListe
 			TURN = TURN + 1;
 			if(TURN > 4)
 				TURN = 1;
+
 			
 			drawnCard = false;
 		}
@@ -961,8 +1027,8 @@ public class Board extends JPanel implements Runnable , KeyListener , MouseListe
 			Card c = Deck.poll();
 			c.isAnim = true;
 			usedCards.add(c);
-			
 			drawnCard = true;
+
 		}
 		
 
@@ -991,6 +1057,7 @@ public class Board extends JPanel implements Runnable , KeyListener , MouseListe
 			c.isAnim = true;
 			usedCards.add(c);
 		}
+		
 	}
 		
 	

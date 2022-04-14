@@ -10,7 +10,7 @@ public class Sorry extends JFrame
 	private static final int WIDTH = 1296;
 	private static final int HEIGHT = 1320;
 	
-	public Sorry() throws IOException
+	public Sorry() throws IOException, UnsupportedAudioFileException
 	{
 		super("SORRY");
 
@@ -28,7 +28,7 @@ public class Sorry extends JFrame
 	
 	
 	
-	public static void main( String args[] ) throws IOException
+	public static void main( String args[] ) throws IOException, UnsupportedAudioFileException
 	{
 		Sorry run = new Sorry();
 	}

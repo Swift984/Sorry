@@ -17,7 +17,9 @@ public class Piece {
 		color = c;
 		pieceX = x;
 		pieceY = y;
+
 		number = n;
+
 	}
 	
 	public int getX()
@@ -46,7 +48,6 @@ public class Piece {
 	{
 		return color;
 	}
-	
 	public int getNumber()
 	{
 		return number;
@@ -58,8 +59,7 @@ public class Piece {
 			return true;
 		return false;
 	}
-	
-
+  
 	public void swap(Piece a, Piece b)
 	{
 		int x = a.getX();
@@ -71,7 +71,6 @@ public class Piece {
 		b.pieceY = y;
 		
 	}
-
 	public void gotoStart()
 	{
 		if(this.color.equals(new File("pawnRED.png")))
